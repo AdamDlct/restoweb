@@ -11,10 +11,28 @@ export default defineConfig(({ mode }) => {
   const emitSourcemaps = mode === 'development'
 
   return {
-    base: process.env.FIGMA_PUBLIC_URL ? `${process.env.FIGMA_PUBLIC_URL}/` : '/',
+    base: process.env.FIGMA_PUBLIC_URL ? `${process.env.FIGMA_PUBLIC_URL}/` : './',
     build: {
+      outDir: mode === 'snapshot' ? 'snapshot' : undefined,
       sourcemap: emitSourcemaps ? 'inline' : false,
       minify: !emitSourcemaps,
+      cssCodeSplit: mode === 'snapshot' ? false : undefined,
+      // For snapshot we produce a single non-module IIFE bundle so it can run
+      // from file:// without module CORS restrictions.
+      rollupOptions: mode === 'snapshot' ? {
+        output: {
+          // keep assets grouped under assets/ for easier packaging
+          entryFileNames: 'assets/index.[hash].js',
+          chunkFileNames: 'assets/[name].[hash].js',
+          assetFileNames: 'assets/[name].[hash][extname]',
+          // produce a single IIFE bundle (no module)
+          format: 'iife',
+          name: 'SnapshotApp',
+          // inline dynamic imports / disable code-splitting so everything is
+          // bundled into the single entry file
+          inlineDynamicImports: true,
+        },
+      } : undefined,
     },
     plugins: [
       react(),
@@ -23,6 +41,34 @@ export default defineConfig(({ mode }) => {
       figmaErrorOverlayReplay(),
       figmaReactRefreshBoundaryFallback(),
       figmaMakeKitPlugin({ storiesGlob: '/src/**/*.stories.{ts,tsx,js,jsx}' }),
+      ...(mode === 'snapshot'
+        ? [
+            // Remove crossorigin attributes that block file:// loads
+            {
+              name: 'snapshot-remove-crossorigin',
+              transformIndexHtml: {
+                order: 'post',
+                handler(html) {
+                  return html.replace(/\s+crossorigin(=("|')?\w+("|')?)?/g, '')
+                },
+              },
+            } as Plugin,
+            // Inline external images (http(s) URLs) as data URIs so the snapshot is offline-capable
+            externalImageInliner(),
+            // Replace module script tags with regular scripts so browsers will
+            // execute the bundle when opened via file://
+            {
+              name: 'snapshot-force-non-module-script',
+              transformIndexHtml: {
+                order: 'post',
+                handler(html) {
+                  // ensure the script is deferred so it executes after the DOM is parsed
+                  return html.replace(/<script\s+type=["']module["']([^>]*)src=["'](.+?)["'][^>]*>\s*<\/script>/gi, '<script defer src="$2"></script>')
+                },
+              },
+            } as Plugin,
+          ]
+        : []),
     ],
     resolve: {
       alias: {
@@ -161,7 +207,7 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
               tag: 'script',
               children: `
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+  function gtag(){dataLayer.push(arguments);} 
   gtag('js', new Date());
   gtag('config', ${JSON.stringify(googleAnalyticsId)});
 `,
@@ -213,17 +259,7 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
 }
 
 /**
- * Replay the most recent build error to clients that connect after
- * it was first broadcast. Vite buffers an error payload only while
- * no clients are connected and clears the buffer on the first
- * reconnect (see `bufferedMessage` in `createWebSocketServer`), so
- * if the preview iframe reloads after Vite already delivered an
- * error to a live socket, the new socket misses the payload and
- * the overlay stays hidden even though the build is still broken.
- * We intercept `ws.send` to remember the latest error and replay
- * it on every new connection; the cache clears on a successful
- * `update` or `full-reload` so a stale overlay can't survive a
- * fixed build.
+ * Plugin: replay recent error overlay to newly connected clients
  */
 function figmaErrorOverlayReplay(): Plugin {
   return {
@@ -351,6 +387,64 @@ function figmaMakeKitPlugin(options: { storiesGlob: string | string[] }): Plugin
           next(err as Error)
         }
       })
+    },
+  }
+}
+
+/**
+ * Snapshot helper plugin: find external image URLs in source modules
+ * and replace them with data URIs fetched at build time. This keeps the
+ * snapshot fully offline-capable without modifying original source files.
+ */
+function externalImageInliner(): Plugin {
+  return {
+    name: 'external-image-inliner',
+    enforce: 'post',
+    async transform(code, id) {
+      if (!/\.(?:tsx|ts|jsx|js)$/.test(id)) return null
+      // quick scan for http(s) strings
+      if (!/https?:\/\//.test(code)) return null
+
+      // regex to find string literals containing http(s) urls (greedy-ish)
+      const urlRegex = /(['"])(https?:\/\/[^'"\)]+)\1/g
+      let match: RegExpExecArray | null
+      let transformed = code
+      const replacements: Array<Promise<void>> = []
+
+      while ((match = urlRegex.exec(code)) !== null) {
+        const full = match[0]
+        const quote = match[1]
+        const url = match[2]
+
+        // only attempt images (quick heuristic) or known image hosts
+        if (!/\.(png|jpe?g|webp|avif|gif)(?:\?|$)/i.test(url) && !/images\.unsplash\.com/i.test(url)) continue
+
+        // create async replacement
+        const p = (async () => {
+          try {
+            const res = await fetch(url)
+            if (!res.ok) return
+            const contentType = res.headers.get('content-type') || ''
+            if (!contentType.startsWith('image/')) return
+            const buf = Buffer.from(await res.arrayBuffer())
+            const b64 = buf.toString('base64')
+            const dataUri = `data:${contentType};base64,${b64}`
+            // replace only the first occurrence of this exact literal
+            transformed = transformed.replace(full, quote + dataUri + quote)
+          } catch (err) {
+            // ignore network errors — leave original URL
+          }
+        })()
+
+        replacements.push(p)
+      }
+
+      if (replacements.length === 0) return null
+      await Promise.all(replacements)
+      return {
+        code: transformed,
+        map: null,
+      }
     },
   }
 }

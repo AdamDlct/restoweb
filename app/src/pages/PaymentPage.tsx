@@ -8,23 +8,28 @@ interface Props {
   onConfirm: () => void;
 }
 
+// Mêmes taux de TVA que dans CartPage (dupliqué faute de fichier de constantes partagé).
 const TVA_RATES: Record<OrderMode, number> = { emporter: 0.055, surplace: 0.10 };
 
 export default function PaymentPage({ cart, orderMode, onBack, onConfirm }: Props) {
   const [form, setForm] = useState({ card: "", cvc: "", expiry: "" });
   const [error, setError] = useState("");
+  // Affiche un état "traitement en cours" pendant la simulation de paiement (aucun vrai appel réseau).
   const [loading, setLoading] = useState(false);
 
   const totalHT = cart.reduce((s, c) => s + c.priceHT * c.qty, 0);
   const tvaRate = TVA_RATES[orderMode];
   const totalTTC = totalHT * (1 + tvaRate);
 
+  // Formate la saisie du numéro de carte en groupes de 4 chiffres (ex: "1234 5678 9012 3456").
   const formatCard = (v: string) => v.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim();
+  // Formate la date d'expiration au format MM/AA au fil de la saisie.
   const formatExpiry = (v: string) => {
     const d = v.replace(/\D/g, "").slice(0, 4);
     return d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d;
   };
 
+  // Valide les champs puis simule un traitement de paiement (délai artificiel de 1,8s) avant de continuer.
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (form.card.replace(/\s/g, "").length < 16) { setError("Numéro de carte invalide."); return; }
@@ -35,6 +40,7 @@ export default function PaymentPage({ cart, orderMode, onBack, onConfirm }: Prop
     setTimeout(() => { setLoading(false); onConfirm(); }, 1800);
   };
 
+  // Numéro affiché sur la carte bancaire animée (masqué tant que rien n'est saisi).
   const cardDisplay = form.card || "•••• •••• •••• ••••";
 
   return (
@@ -214,6 +220,7 @@ export default function PaymentPage({ cart, orderMode, onBack, onConfirm }: Prop
   );
 }
 
+// Champ de saisie stylisé pour les informations de carte bancaire (numéro, expiration, CVC).
 function PayField({ label, value, onChange, placeholder, maxLength, inputMode }: {
   label: string; value: string; onChange: (v: string) => void; placeholder?: string; maxLength?: number; inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
 }) {
@@ -238,6 +245,7 @@ function PayField({ label, value, onChange, placeholder, maxLength, inputMode }:
   );
 }
 
+// Ligne clé/valeur du récapitulatif de commande (panneau de droite).
 function SRow({ label, value, muted, large, accent }: { label: string; value: string; muted?: boolean; large?: boolean; accent?: boolean }) {
   return (
     <div className="flex items-center justify-between">

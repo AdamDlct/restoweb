@@ -1,16 +1,30 @@
 import { useState } from "react";
+import logoUrl from "../assets/logo.svg";
 
+// Props attendues par la page d'authentification :
+// - onLogin est appelé par le composant parent (App) une fois le formulaire validé.
 interface Props {
   onLogin: () => void;
 }
 
+// Photo d'ambiance affichée sur le panneau gauche (visible uniquement sur grand écran).
 const HERO_IMG = "https://images.unsplash.com/photo-1469234496837-d0101f54be3e?w=900&h=1200&fit=crop&auto=format";
 
+// Logo "Resto Web" (fichier vectoriel fourni, importé depuis src/assets/logo.svg).
+// `size` contrôle la largeur affichée en pixels ; la hauteur suit le ratio d'origine du fichier.
+function Logo({ size = 56 }: { size?: number }) {
+  return <img src={logoUrl} alt="Logo Resto Web" style={{ width: size, height: "auto" }} />;
+}
+
 export default function AuthPage({ onLogin }: Props) {
+  // Onglet actif du formulaire : connexion ou inscription.
   const [mode, setMode] = useState<"login" | "register">("login");
+  // Valeurs saisies dans les différents champs du formulaire.
   const [form, setForm] = useState({ login: "", email: "", password: "", confirm: "" });
+  // Message d'erreur affiché en cas de validation échouée.
   const [error, setError] = useState("");
 
+  // Validation basique côté client avant de déclencher la connexion (aucun appel serveur ici).
   const handle = (e: React.FormEvent) => {
     e.preventDefault();
     if (mode === "register") {
@@ -25,7 +39,7 @@ export default function AuthPage({ onLogin }: Props) {
 
   return (
     <div className="min-h-screen flex">
-      {/* Photo panel */}
+      {/* Panneau gauche : photo d'ambiance, visible uniquement à partir du breakpoint lg */}
       <div className="hidden lg:block w-[52%] relative overflow-hidden">
         <img
           src={HERO_IMG}
@@ -33,50 +47,36 @@ export default function AuthPage({ onLogin }: Props) {
           className="absolute inset-0 w-full h-full object-cover"
           style={{ filter: "brightness(0.55)" }}
         />
-        {/* Gradient overlay */}
+        {/* Dégradé sombre pour assurer la lisibilité du texte au-dessus de la photo */}
         <div
           className="absolute inset-0"
           style={{ background: "linear-gradient(to right, rgba(26,19,16,0) 60%, #1a1310 100%)" }}
         />
-        {/* Content on photo */}
-        <div className="relative h-full flex flex-col justify-between p-12">
-          <div className="flex items-center gap-2">
-            <span
-              className="text-2xl tracking-widest"
-              style={{ fontFamily: "var(--font-serif)", color: "var(--accent)" }}
-            >
-              Bistro
-            </span>
-            <span
-              className="text-2xl"
-              style={{ fontFamily: "var(--font-serif)", color: "#fff" }}
-            >
-              Moderne
-            </span>
-          </div>
-          <div>
+        {/* Contenu superposé à la photo : logo en haut, accroche centrée à gauche */}
+        <div className="relative h-full p-12">
+          <Logo size={56} />
+          <div className="absolute inset-0 flex flex-col justify-center items-start p-12">
             <p
-              className="text-5xl leading-[1.15] mb-5 text-white"
+              className="text-7xl leading-[1.15] mb-6 text-white text-left"
               style={{ fontFamily: "var(--font-serif)", textShadow: "0 2px 24px rgba(0,0,0,0.5)" }}
             >
               Commandez,<br />
               <em style={{ color: "var(--accent)" }}>savourez</em>,<br />
               répétez.
             </p>
-            <p className="text-sm leading-relaxed max-w-xs" style={{ color: "rgba(255,255,255,0.65)" }}>
+            <p className="text-base leading-relaxed max-w-xs text-left" style={{ color: "rgba(255,255,255,0.65)" }}>
               Cuisine de saison, produits locaux. Votre expérience culinaire commence ici.
             </p>
           </div>
         </div>
       </div>
 
-      {/* Form panel */}
+      {/* Panneau droit : formulaire de connexion / inscription */}
       <div className="flex-1 flex items-center justify-center p-8 lg:p-14" style={{ background: "var(--background)" }}>
         <div className="w-full max-w-md">
-          {/* Logo mobile */}
-          <div className="lg:hidden mb-8 text-center">
-            <span style={{ fontFamily: "var(--font-serif)", color: "var(--accent)", fontSize: "1.6rem" }}>Bistro </span>
-            <span style={{ fontFamily: "var(--font-serif)", color: "var(--foreground)", fontSize: "1.6rem" }}>Moderne</span>
+          {/* Logo affiché uniquement sur mobile/tablette (le panneau photo gauche est masqué en dessous de lg) */}
+          <div className="lg:hidden mb-8 flex justify-center">
+            <Logo size={72} />
           </div>
 
           <h2
@@ -91,7 +91,7 @@ export default function AuthPage({ onLogin }: Props) {
               : "Rejoignez-nous et commandez en quelques secondes."}
           </p>
 
-          {/* Tabs */}
+          {/* Onglets de bascule entre connexion et inscription */}
           <div className="flex gap-0 mb-8" style={{ borderBottom: "1px solid var(--border)" }}>
             {(["login", "register"] as const).map((m) => (
               <button
@@ -150,6 +150,7 @@ export default function AuthPage({ onLogin }: Props) {
   );
 }
 
+// Champ de formulaire réutilisable (label + input stylisé) pour les écrans de connexion/inscription.
 function Field({ label, type, value, onChange, placeholder }: {
   label: string; type: string; value: string; onChange: (v: string) => void; placeholder?: string;
 }) {

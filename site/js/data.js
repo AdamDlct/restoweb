@@ -1,16 +1,15 @@
-// Modèle d'un plat/produit affiché sur la carte du restaurant.
-export interface Product {
-  id: number;
-  name: string;
-  description: string;
-  priceHT: number; // prix unitaire hors taxes, en euros
-  category: string; // doit correspondre à une valeur de CATEGORIES
-  emoji: string; // affiché en attendant le chargement de l'image
-  imageUrl: string;
-}
+// ============================================================================
+// data.js — "base de données" du site (aucun vrai serveur/BDD ici)
+// ============================================================================
+// Principe : on sépare les DONNÉES (ce fichier) du COMPORTEMENT (app.js).
+// PRODUCTS et CATEGORIES sont de simples variables globales (déclarées avec
+// "const") : comme ce fichier est chargé AVANT app.js dans index.html
+// (<script src="js/data.js"> puis <script src="js/app.js">), app.js peut
+// utiliser PRODUCTS/CATEGORIES directement, sans import ni export.
+// ============================================================================
 
-// Données statiques (mock) de la carte du restaurant, utilisées par CatalogPage.
-export const PRODUCTS: Product[] = [
+// Liste des plats de la carte, utilisée par renderProductGrid() dans app.js.
+const PRODUCTS = [
   {
     id: 1, name: "Soupe à l'oignon", description: "Gratinée, bouillon de bœuf, comté",
     priceHT: 8.50, category: "Entrées", emoji: "🍲",
@@ -73,5 +72,5 @@ export const PRODUCTS: Product[] = [
   },
 ];
 
-// Catégories utilisées pour filtrer la carte (voir CatalogPage).
-export const CATEGORIES = ["Entrées", "Plats", "Desserts", "Boissons"] as const;
+// Catégories utilisées pour filtrer la carte.
+const CATEGORIES = ["Entrées", "Plats", "Desserts", "Boissons"];

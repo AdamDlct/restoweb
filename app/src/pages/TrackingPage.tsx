@@ -8,6 +8,8 @@ interface Props {
 
 type OrderState = "attente" | "preparation" | "prete" | "servie";
 
+// Étapes du suivi de commande, dans l'ordre. `duration` (en ms) est le temps passé sur
+// l'étape avant de passer automatiquement à la suivante (0 = étape finale, pas de suite).
 const STATES: { key: OrderState; label: string; emoji: string; color: string; duration: number }[] = [
   { key: "attente", label: "En attente", emoji: "⏳", color: "#9e8878", duration: 4000 },
   { key: "preparation", label: "En préparation", emoji: "👨‍🍳", color: "#e8c27a", duration: 6000 },
@@ -15,18 +17,24 @@ const STATES: { key: OrderState; label: string; emoji: string; color: string; du
   { key: "servie", label: "Servie", emoji: "✅", color: "#4caf76", duration: 0 },
 ];
 
+// Photo décorative affichée dans le panneau latéral de suivi.
 const FOOD_IMG = "https://images.unsplash.com/photo-1675670601305-3e04ec45430f?w=600&h=400&fit=crop&auto=format";
 
 export default function TrackingPage({ orderId, orderMode }: Props) {
+  // Index de l'étape courante dans STATES.
   const [stateIdx, setStateIdx] = useState(0);
+  // Affiche la notification "commande prête" une fois l'étape correspondante atteinte.
   const [showNotif, setShowNotif] = useState(false);
 
+  // Fait avancer automatiquement le suivi d'une étape à l'autre après le délai défini,
+  // simulant la progression réelle d'une commande sans backend.
   useEffect(() => {
     if (stateIdx >= STATES.length - 1) return;
     const t = setTimeout(() => setStateIdx((i) => i + 1), STATES[stateIdx].duration);
     return () => clearTimeout(t);
   }, [stateIdx]);
 
+  // Déclenche la notification visuelle avec un léger délai lorsque la commande devient "prête".
   useEffect(() => {
     if (STATES[stateIdx].key === "prete") {
       setTimeout(() => setShowNotif(true), 400);
@@ -34,6 +42,7 @@ export default function TrackingPage({ orderId, orderMode }: Props) {
   }, [stateIdx]);
 
   const current = STATES[stateIdx];
+  // Pourcentage de progression de la barre, basé sur la position de l'étape courante.
   const progressPct = ((stateIdx) / (STATES.length - 1)) * 100;
 
   return (

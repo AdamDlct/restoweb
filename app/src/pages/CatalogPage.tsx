@@ -9,23 +9,30 @@ interface Props {
   onGoToCart: () => void;
 }
 
+// Photo de bannière affichée en haut de la carte.
 const HERO_IMG = "https://images.unsplash.com/photo-1657593088889-5105c637f2a8?w=1400&h=500&fit=crop&auto=format";
 
 export default function CatalogPage({ cart, totalItems, addToCart, onGoToCart }: Props) {
+  // Catégorie actuellement sélectionnée pour le filtre ("Tous" par défaut).
   const [activeCategory, setActiveCategory] = useState<string>("Tous");
+  // Quantité choisie par produit avant l'ajout au panier (1 par défaut).
   const [qtys, setQtys] = useState<Record<number, number>>({});
+  // Marque temporairement un produit comme "ajouté" pour afficher un retour visuel sur son bouton.
   const [added, setAdded] = useState<Record<number, boolean>>({});
 
   const categories = ["Tous", ...CATEGORIES];
   const filtered = activeCategory === "Tous" ? PRODUCTS : PRODUCTS.filter((p) => p.category === activeCategory);
+  // Quantité sélectionnée pour un produit donné, 1 si non encore modifiée.
   const getQty = (id: number) => qtys[id] ?? 1;
 
+  // Ajoute le produit au panier avec la quantité choisie, puis affiche brièvement une confirmation.
   const handleAdd = (product: Product) => {
     addToCart({ id: product.id, name: product.name, priceHT: product.priceHT, qty: getQty(product.id) });
     setAdded((prev) => ({ ...prev, [product.id]: true }));
     setTimeout(() => setAdded((prev) => ({ ...prev, [product.id]: false })), 1400);
   };
 
+  // Total HT du panier, affiché dans l'en-tête et la barre flottante.
   const totalHT = cart.reduce((s, c) => s + c.priceHT * c.qty, 0);
 
   return (
@@ -134,6 +141,7 @@ export default function CatalogPage({ cart, totalItems, addToCart, onGoToCart }:
   );
 }
 
+// Carte d'affichage d'un produit dans la grille : photo, description, prix et sélecteur de quantité.
 function ProductCard({ product, qty, isAdded, onQtyChange, onAdd }: {
   product: Product;
   qty: number;
@@ -141,6 +149,7 @@ function ProductCard({ product, qty, isAdded, onQtyChange, onAdd }: {
   onQtyChange: (delta: number) => void;
   onAdd: () => void;
 }) {
+  // Affiche l'emoji du produit tant que l'image distante n'est pas encore chargée.
   const [imgLoaded, setImgLoaded] = useState(false);
 
   return (

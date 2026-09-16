@@ -10,6 +10,7 @@ interface Props {
   onPay: () => void;
 }
 
+// Taux de TVA français applicables : 5,5 % pour la vente à emporter, 10 % pour la consommation sur place.
 const TVA_RATES: Record<OrderMode, number> = { emporter: 0.055, surplace: 0.10 };
 
 export default function CartPage({ cart, orderMode, setOrderMode, updateQty, removeItem, onBack, onPay }: Props) {
@@ -180,6 +181,7 @@ export default function CartPage({ cart, orderMode, setOrderMode, updateQty, rem
   );
 }
 
+// Ligne d'affichage clé/valeur du bloc totaux (ex: "Total HT" ... "42,00 €").
 function TRow({ label, value, muted, large, accent }: { label: string; value: string; muted?: boolean; large?: boolean; accent?: boolean }) {
   return (
     <div className="flex items-center justify-between">

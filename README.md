@@ -26,11 +26,23 @@ informatisé, découpé en deux applications :
 
 PHP · HTML · CSS · MariaDB · API REST
 
+## Structure du dépôt
+
+```
+restoweb/
+├── docs/          Diagrammes de conception (MCD, MLD, DA, DCU, sitemap)
+├── database/      Scripts SQL (modèle physique de données)
+└── app/           Prototype d'interface (React/Vite/TS, généré via Figma Make)
+```
+
+Le code source PHP de l'application finale n'est pas encore versionné ; le dossier
+[`app/`](./app) contient pour l'instant un prototype d'interface utilisateur.
+
 ## Documentation
 
-L'ensemble de la documentation de conception, de réalisation et d'exploitation 
-(diagrammes, modèles de données, maquettes, manuels d'installation et d'utilisation) 
-est disponible dans le dossier [`/doc`](./doc).
+L'ensemble de la documentation de conception (diagrammes, modèles de données) est
+disponible dans le dossier [`docs/`](./docs). Les scripts SQL se trouvent dans
+[`database/`](./database).
 
 ## Licence
 

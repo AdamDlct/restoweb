@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS restoswing;
+USE restoswing;
+
 CREATE TABLE utilisateur(
    id_user INT AUTO_INCREMENT,
    login VARCHAR(255) ,

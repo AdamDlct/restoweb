@@ -1,0 +1,10 @@
+{
+  "description": "Streamline product ordering with user authentication, dynamic cart management, real-time order tracking, and a seamless checkout experience for customers.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

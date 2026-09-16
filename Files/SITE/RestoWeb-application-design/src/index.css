@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+@import 'tailwindcss';
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --radius-DEFAULT: var(--radius);
+  --font-display: var(--font-serif);
+  --font-body: var(--font-sans);
+  --font-mono: var(--font-mono-face);
+}
+
+:root {
+  --background: #1a1310;
+  --foreground: #f5ede4;
+  --card: #231b16;
+  --card-foreground: #f5ede4;
+  --primary: #e8845a;
+  --primary-foreground: #1a1310;
+  --secondary: #2e2219;
+  --secondary-foreground: #c9b8a8;
+  --muted: #2a1f17;
+  --muted-foreground: #9e8878;
+  --accent: #f0a96b;
+  --accent-foreground: #1a1310;
+  --border: rgba(232, 132, 90, 0.18);
+  --ring: #e8845a;
+  --radius: 0.5rem;
+  --font-serif: "DM Serif Display", Georgia, serif;
+  --font-sans: "Outfit", system-ui, sans-serif;
+  --font-mono-face: "DM Mono", monospace;
+}
+
+html, body, #root {
+  height: 100%;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+*:hover {
+  scrollbar-color: rgba(232, 132, 90, 0.3) transparent;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+}

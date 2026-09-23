@@ -1,50 +1,57 @@
 ﻿<?php
 include("db_functions.php");
 
+session_start();
+
+// $user_id = isset($_SESSION["id_user"]) ?? "";
+$user_id = 1; //tests
+
+$sql = 'SELECT * FROM commande WHERE id_user = :id_user';
+
 try {
   $dbh = db_connect();
-  $result = $dbh->query('SELECT * FROM commande;');
+  $result = $dbh->prepare($sql);
+  $result->bindValue(":id_user", $user_id);
+  $result->execute();
   $rows = $result->fetchAll();
 } catch (PDOException $e) {
   die("<p>Erreur lors de la requête SQL : " . $e->getMessage() . "</p>");
-}
-
-
+};
 
 $commande = $rows[0];
 
-$id_commande = $commande["id_commande"];
-$id_etat = $commande["id_etat"];
-$date_commande = $commande["date_commande"];
-$total_commande = $commande["total_commande"];
-// $type_conso     = $commande["type_conso"];
-$type_conso = 0;
+  $id_commande = $commande["id_commande"];
+  $id_etat = $commande["id_etat"];
+  $date_commande = $commande["date_commande"];
+  $total_commande = $commande["total_commande"];
+  // $type_conso     = $commande["type_conso"];
+  $type_conso = 0; //tests
 
 
-// print_r($rows);
+print_r($rows[0]);
 // print_r($_SESSION);
-  /*
-    ============================================================================
-    INTEGRATION PHP - PAGE SUIVI DE COMMANDE
-    ============================================================================
-    Objectif futur :
-    - Demarrer la session avec session_start().
-    - Verifier que l'utilisateur est connecte.
-    - Recuperer l'identifiant de commande depuis l'URL ou la session.
-    - Charger les informations de la commande depuis la base de donnees.
-    - Afficher le numero, le mode, le statut et le temps estime.
-    - Mettre a jour l'affichage selon le statut reel de la commande.
+/*
+  ============================================================================
+  INTEGRATION PHP - PAGE SUIVI DE COMMANDE
+  ============================================================================
+  Objectif futur :
+  - Demarrer la session avec session_start().
+  - Verifier que l'utilisateur est connecte.
+  - Recuperer l'identifiant de commande depuis l'URL ou la session.
+  - Charger les informations de la commande depuis la base de donnees.
+  - Afficher le numero, le mode, le statut et le temps estime.
+  - Mettre a jour l'affichage selon le statut reel de la commande.
 
-    A prevoir :
-    - Verifier que la commande appartient bien a l'utilisateur connecte.
-    - Prevoir les statuts possibles : en attente, en preparation, prete, servie.
-    - Remplacer progressivement la simulation JavaScript par des donnees PHP/SQL.
-    - Eventuellement rafraichir le statut avec une requete AJAX plus tard.
+  A prevoir :
+  - Verifier que la commande appartient bien a l'utilisateur connecte.
+  - Prevoir les statuts possibles : en attente, en preparation, prete, servie.
+  - Remplacer progressivement la simulation JavaScript par des donnees PHP/SQL.
+  - Eventuellement rafraichir le statut avec une requete AJAX plus tard.
 
-    Pour le moment, aucune logique PHP n'est ajoutee : ce bloc sert uniquement
-    de guide pour la future integration.
-  */
-  ?>
+  Pour le moment, aucune logique PHP n'est ajoutee : ce bloc sert uniquement
+  de guide pour la future integration.
+*/
+?>
 <!DOCTYPE html>
 <html lang="fr">
 

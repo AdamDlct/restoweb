@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include("db_functions.php");
 
 session_start();

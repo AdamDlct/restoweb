@@ -39,10 +39,10 @@
 <div id="page-auth" class="page active">
   <div class="auth-layout">
 
-    <!-- Colonne gauche : photo d'ambiance + texte d'accroche (cachÃ©e en dessous de 1024px, voir media query CSS) -->
+    <!-- Colonne gauche : photo d'ambiance + texte d'accroche (cachée en dessous de 1024px, voir media query CSS) -->
     <div class="auth-hero">
       <img src="https://images.unsplash.com/photo-1469234496837-d0101f54be3e?w=900&h=1200&fit=crop&auto=format" alt="Ambiance Resto Web, verres de vin sur table en bois" />
-      <!-- DÃ©gradÃ© sombre posÃ© au-dessus de la photo pour que le texte reste lisible -->
+      <!-- Dégradé sombre posé au-dessus de la photo pour que le texte reste lisible -->
       <div class="auth-hero-gradient"></div>
       <div class="auth-hero-content">
         <img src="assets/logo.svg" alt="Logo Resto Web" width="56" />
@@ -51,10 +51,10 @@
         <p class="auth-hero-title">
           Commandez,<br />
           <em>savourez</em>,<br />
-          rÃ©pÃ©tez.
+          répétez.
         </p>
         <p class="auth-hero-sub">
-          Cuisine de saison, produits locaux. Votre expÃ©rience culinaire commence ici.
+          Cuisine de saison, produits locaux. Votre expérience culinaire commence ici.
         </p>
       </div>
     </div>
@@ -62,15 +62,15 @@
     <!-- Colonne droite : formulaire de connexion / inscription -->
     <div class="auth-panel">
       <div class="auth-panel-inner">
-        <!-- Logo affichÃ© uniquement sur mobile (le panneau photo de gauche est masquÃ©) -->
+        <!-- Logo affiché uniquement sur mobile (le panneau photo de gauche est masqué) -->
         <div class="auth-logo-mobile">
           <img src="assets/logo.svg" alt="Logo Resto Web" width="72" />
         </div>
 
         <h2 id="auth-title">Bon retour</h2>
-        <p class="auth-subtitle" id="auth-subtitle">Connectez-vous pour accÃ©der Ã  la carte.</p>
+        <p class="auth-subtitle" id="auth-subtitle">Connectez-vous pour accéder à la carte.</p>
 
-        <!-- Onglets Connexion / Inscription : data-mode lu par app.js pour savoir lequel a Ã©tÃ© cliquÃ© -->
+        <!-- Onglets Connexion / Inscription : data-mode lu par app.js pour savoir lequel a été cliqué -->
         <div class="auth-tabs">
           <button type="button" class="auth-tab active" data-mode="login">Connexion</button>
           <button type="button" class="auth-tab" data-mode="register">Inscription</button>
@@ -78,9 +78,9 @@
 
         <!--
           Formulaire : chaque <label for="..."> pointe vers l'id de son <input>.
-          Principe d'accessibilitÃ© : cliquer sur le label active/sÃ©lectionne le champ.
-          Les champs "hidden-field" sont masquÃ©s par CSS en mode Connexion,
-          et affichÃ©s uniquement en mode Inscription (voir app.js â†’ Ã©couteur ".auth-tab").
+          Principe d'accessibilité : cliquer sur le label active/sélectionne le champ.
+          Les champs "hidden-field" sont masqués par CSS en mode Connexion,
+          et affichés uniquement en mode Inscription (voir app.js → écouteur ".auth-tab").
         -->
         <!--
   GUIDE HTML / PHP :
@@ -101,18 +101,18 @@
           </div>
           <div class="field">
             <label for="password">Mot de passe</label>
-            <input type="password" id="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
+            <input type="password" id="password" placeholder="••••••••" />
           </div>
           <div class="field hidden-field" id="field-confirm">
             <label for="confirm">Confirmation du mot de passe</label>
-            <input type="password" id="confirm" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
+            <input type="password" id="confirm" placeholder="••••••••" />
           </div>
 
-          <!-- Message d'erreur : vide par dÃ©faut, rempli et affichÃ© par app.js si la validation Ã©choue -->
+          <!-- Message d'erreur : vide par défaut, rempli et affiché par app.js si la validation échoue -->
           <!-- GUIDE PHP : ce paragraphe pourra afficher les erreurs generees par la validation serveur. -->
           <p class="error-msg" id="auth-error" style="display:none;"></p>
 
-          <button type="submit" class="btn-primary auth-submit" id="auth-submit">Se connecter â†’</button>
+          <button type="submit" class="btn-primary auth-submit" id="auth-submit">Se connecter →</button>
         </form>
       </div>
     </div>

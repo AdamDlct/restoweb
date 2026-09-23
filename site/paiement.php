@@ -53,14 +53,14 @@
     <!-- Colonne gauche : formulaire -->
     <div>
       <h1><em>Paiement</em></h1>
-      <p class="payment-subtitle">Finalisez votre commande en renseignant vos coordonnÃ©es.</p>
+      <p class="payment-subtitle">Finalisez votre commande en renseignant vos coordonnées.</p>
 
       <div class="fictitious-notice">
-        <span class="icon">ðŸ”’</span>
-        <span><strong>Paiement fictif</strong> â€” aucune transaction rÃ©elle. Ne saisissez pas vos vraies coordonnÃ©es bancaires.</span>
+        <span class="icon">💳</span>
+        <span><strong>Paiement fictif</strong> — aucune transaction réelle. Ne saisissez pas vos vraies coordonnées bancaires.</span>
       </div>
 
-      <!-- Carte bancaire visuelle : son contenu (numÃ©ro, expiration, CVC) est mis Ã  jour en direct par app.js pendant la saisie -->
+      <!-- Carte bancaire visuelle : son contenu (numéro, expiration, CVC) est mis à jour en direct par app.js pendant la saisie -->
       <div class="card-widget">
         <div class="circle-a"></div>
         <div class="circle-b"></div>
@@ -72,7 +72,7 @@
               <circle cx="25" cy="13" r="13" fill="rgba(255,255,255,0.25)" />
             </svg>
           </div>
-          <p class="card-number" id="card-number-display">â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢ â€¢â€¢â€¢â€¢</p>
+          <p class="card-number" id="card-number-display">•••• •••• •••• ••••</p>
           <div class="card-meta">
             <div>
               <p class="sub-label">Expiration</p>
@@ -80,13 +80,13 @@
             </div>
             <div class="right">
               <p class="sub-label">CVC</p>
-              <p id="card-cvc-display">â€¢â€¢â€¢</p>
+              <p id="card-cvc-display">•••</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- inputmode="numeric" : ouvre le clavier numÃ©rique sur mobile sans changer le type rÃ©el de l'input (reste "text" pour permettre le formatage avec espaces / slash) -->
+      <!-- inputmode="numeric" : ouvre le clavier numérique sur mobile sans changer le type réel de l'input (reste "text" pour permettre le formatage avec espaces / slash) -->
       <!--
         GUIDE HTML / PHP :
         - Ajouter method="post" lorsque le traitement serveur sera pret.
@@ -96,7 +96,7 @@
       -->
       <form id="payment-form" class="pay-form">
         <div class="field pay-field">
-          <label for="pay-card">NumÃ©ro de carte</label>
+          <label for="pay-card">Numéro de carte</label>
           <input type="text" id="pay-card" placeholder="1234 5678 9012 3456" maxlength="19" inputmode="numeric" />
         </div>
         <div class="pay-row">
@@ -113,16 +113,16 @@
         <!-- GUIDE PHP : afficher ici les erreurs serveur du paiement fictif. -->
         <p class="error-msg" id="payment-error" style="display:none;"></p>
 
-        <button type="submit" class="btn-primary pay-submit" id="payment-submit">Payer 0.00 â‚¬ TTC</button>
+        <button type="submit" class="btn-primary pay-submit" id="payment-submit">Payer 0.00 € TTC</button>
       </form>
     </div>
 
-    <!-- Colonne droite : rÃ©capitulatif de commande, collant (sticky) pendant le scroll -->
+    <!-- Colonne droite : récapitulatif de commande, collant (sticky) pendant le scroll -->
     <div class="summary-panel">
       <div class="summary-card">
-        <div class="summary-head"><h2>RÃ©capitulatif</h2></div>
+        <div class="summary-head"><h2>Récapitulatif</h2></div>
         <div class="summary-content">
-          <!-- Rempli par renderPayment() dans app.js Ã  partir du panier -->
+          <!-- Rempli par renderPayment() dans app.js à partir du panier -->
           <!--
             GUIDE PHP :
             - Remplacer #summary-items par une boucle sur le panier serveur.
@@ -131,11 +131,11 @@
           -->
           <div class="summary-items" id="summary-items"></div>
           <div class="summary-totals">
-            <div class="trow"><span class="label">Total HT</span><span class="value" id="summary-total-ht">0.00 â‚¬</span></div>
-            <div class="trow"><span class="label muted" id="summary-tva-label">TVA 10 %</span><span class="value muted" id="summary-tva-value">0.00 â‚¬</span></div>
-            <div class="trow total-row"><span class="label">Total TTC</span><span class="value" id="summary-total-ttc">0.00 â‚¬</span></div>
+            <div class="trow"><span class="label">Total HT</span><span class="value" id="summary-total-ht">0.00 €</span></div>
+            <div class="trow"><span class="label muted" id="summary-tva-label">TVA 10 %</span><span class="value muted" id="summary-tva-value">0.00 €</span></div>
+            <div class="trow total-row"><span class="label">Total TTC</span><span class="value" id="summary-total-ttc">0.00 €</span></div>
           </div>
-          <div class="summary-mode" id="summary-mode">ðŸ½ï¸ Sur place</div>
+          <div class="summary-mode" id="summary-mode">🏫 Sur place</div>
         </div>
       </div>
     </div>

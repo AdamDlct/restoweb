@@ -35,12 +35,12 @@
 <!-- Page Catalogue extraite de l'ancienne SPA index.html. -->
 <div id="page-catalog" class="page active">
 
-  <!-- En-tÃªte collant en haut de l'Ã©cran (position: sticky en CSS) -->
+  <!-- En-tête collant en haut de l'écran (position: sticky en CSS) -->
   <header class="topbar">
     <div class="brand brand-lg">
       <span>Resto</span><span> Web</span>
     </div>
-    <!-- data-nav n'est PAS utilisÃ© ici : ce bouton a un id dÃ©diÃ© car il doit aussi afficher le total du panier -->
+    <!-- data-nav n'est PAS utilisé ici : ce bouton a un id dédié car il doit aussi afficher le total du panier -->
     <!--
       GUIDE HTML / PHP :
       - Afficher ici le nombre d'articles du panier stocke en session.
@@ -56,17 +56,17 @@
     </button>
   </header>
 
-  <!-- BanniÃ¨re photo -->
+  <!-- Bannière photo -->
   <div class="catalog-hero">
     <img src="https://images.unsplash.com/photo-1657593088889-5105c637f2a8?w=1400&h=500&fit=crop&auto=format" alt="Salle du restaurant Resto Web" />
     <div class="catalog-hero-gradient"></div>
     <div class="catalog-hero-text">
       <h1>Notre <em>carte</em></h1>
-      <p>Produits frais Â· Recettes maison Â· Commandez directement depuis votre table</p>
+      <p>Produits frais · Recettes maison · Commandez directement depuis votre table</p>
     </div>
   </div>
 
-  <!-- Zone principale : filtres + grille de produits, gÃ©nÃ©rÃ©s par app.js (renderCategoryFilters / renderProductGrid) -->
+  <!-- Zone principale : filtres + grille de produits, générés par app.js (renderCategoryFilters / renderProductGrid) -->
   <div class="catalog-body">
     <!-- GUIDE PHP : remplacer ce conteneur par une boucle sur les categories SQL, avec htmlspecialchars() sur les libelles. -->
     <div class="category-filters" id="category-filters"></div>
@@ -79,12 +79,12 @@
     <div class="product-grid" id="product-grid"></div>
   </div>
 
-  <!-- Barre flottante "Voir mon panier", cachÃ©e tant que le panier est vide (classe .visible ajoutÃ©e par app.js) -->
+  <!-- Barre flottante "Voir mon panier", cachée tant que le panier est vide (classe .visible ajoutée par app.js) -->
   <div class="floating-cart" id="floating-cart">
     <button type="button" class="floating-cart-btn" id="floating-cart-btn">
       <span class="floating-cart-badge" id="floating-cart-badge">0</span>
       <span>Voir mon panier</span>
-      <span class="floating-cart-total" id="floating-cart-total">0.00 â‚¬</span>
+      <span class="floating-cart-total" id="floating-cart-total">0.00 €</span>
     </button>
   </div>
 </div>

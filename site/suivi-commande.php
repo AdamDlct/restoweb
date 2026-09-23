@@ -1,4 +1,21 @@
 ﻿<?php
+include("db_functions.php");
+
+$dbh = db_connect();
+$result = $dbh->query('SELECT * FROM commande;');
+$rows = $result->fetchAll();
+
+$commande = $rows[0];
+
+$id_commande    = $commande["id_commande"];
+$id_etat        = $commande["id_etat"];
+$date_commande  = $commande["date_commande"];
+$total_commande = $commande["total_commande"];
+// $type_conso     = $commande["type_conso"];
+$type_conso     = 1;
+
+
+print_r($rows)
 /*
   ============================================================================
   INTEGRATION PHP - PAGE SUIVI DE COMMANDE
@@ -39,14 +56,14 @@
       <span>Resto</span><span> Web</span>
     </div>
     <!-- GUIDE PHP : remplacer #0000 par le numero de commande lu depuis la base. -->
-    <span class="order-badge" id="tracking-order-id">#0000</span>
+    <span class="order-badge" id="tracking-order-id"><?= $id_commande ?></span>
   </header>
 
   <div class="tracking-body">
     <!-- Colonne gauche : statut courant + barre de progression -->
     <div class="tracking-left">
       <div class="status-card">
-        <!-- Halo de couleur en fond, purement dÃ©coratif -->
+        <!-- Halo de couleur en fond, purement décoratif -->
         <div class="status-glow"><div class="blob" id="status-blob"></div></div>
         <div class="status-content">
           <!--
@@ -55,15 +72,15 @@
           - Statuts possibles : en attente, en preparation, prete, servie.
           - Verifier que la commande appartient a l'utilisateur connecte avant affichage.
         -->
-          <span class="status-emoji" id="status-emoji">â³</span>
+          <span class="status-emoji" id="status-emoji">⏳</span>
           <h1 class="status-title" id="status-title">En attente</h1>
-          <p class="status-desc" id="status-desc">Votre commande a Ã©tÃ© reÃ§ue et est en file d'attente.</p>
+          <p class="status-desc" id="status-desc">Votre commande a été reçue et est en file d'attente.</p>
         </div>
       </div>
 
-      <!-- Notification "commande prÃªte" : masquÃ©e par dÃ©faut, affichÃ©e par app.js Ã  la bonne Ã©tape -->
+      <!-- Notification "commande prête" : masquée par défaut, affichée par app.js à la bonne étape -->
       <div class="notif" id="tracking-notif">
-        <span class="icon">ðŸ””</span>
+        <span class="icon">👨‍🍳</span>
         <span class="text" id="tracking-notif-text">Votre plat arrive !</span>
       </div>
 
@@ -72,18 +89,18 @@
           <!-- GUIDE PHP : la progression pourra dependre du statut reel de la commande. -->
           <div class="progress-fill" id="progress-fill"></div>
         </div>
-        <!-- Les 4 Ã©tapes (â³ ðŸ‘¨â€ðŸ³ ðŸ”” âœ…) sont gÃ©nÃ©rÃ©es par app.js Ã  partir du tableau STATES -->
+        <!-- Les 4 étapes (⏳ 👨‍🍳 🍽️ ✔️) sont générées par app.js à partir du tableau STATES -->
         <div class="steps-row" id="steps-row"></div>
       </div>
 
-      <!-- Visible uniquement Ã  la toute derniÃ¨re Ã©tape ("servie") -->
+      <!-- Visible uniquement à la toute dernière étape ("servie") -->
       <button type="button" class="new-order-btn" id="new-order-btn">Nouvelle commande</button>
     </div>
 
-    <!-- Colonne droite : dÃ©tails de la commande + photo dÃ©corative -->
+    <!-- Colonne droite : détails de la commande + photo décorative -->
     <div class="tracking-right">
       <div class="details-card">
-        <h3>DÃ©tails</h3>
+        <h3>Détails</h3>
         <div class="details-grid">
           <!--
             GUIDE PHP :
@@ -97,14 +114,19 @@
           </div>
           <div>
             <p class="dt-label">Mode</p>
-            <p class="dt-value" id="detail-mode">ðŸ½ï¸ Sur place</p>
+            <?php 
+            
+            echo $type_conso ? "<p class='dt-value' id='detail-mode'>🏫 Sur place</p>" : "<p class='dt-value' id='detail-mode'>🏫 Sur place</p>";
+            
+            ?>
+            
           </div>
           <div class="full">
             <p class="dt-label">Statut</p>
-            <span class="status-pill" id="detail-status">â³ En attente</span>
+            <span class="status-pill" id="detail-status">⏳ En attente</span>
           </div>
           <div class="full">
-            <p class="dt-label">Temps estimÃ©</p>
+            <p class="dt-label">Temps estimé</p>
             <p class="dt-value mono" id="detail-eta">~15 min</p>
           </div>
         </div>
@@ -114,7 +136,7 @@
         <img src="https://images.unsplash.com/photo-1675670601305-3e04ec45430f?w=600&h=400&fit=crop&auto=format" alt="Plat gastronomique Resto Web" />
         <div class="food-photo-gradient"></div>
         <div class="food-photo-text">
-          <p>Cuisine de saison Â· Produits locaux</p>
+          <p>Cuisine de saison · Produits locaux</p>
         </div>
       </div>
     </div>
@@ -122,8 +144,8 @@
 </div>
 
 
-<script src="js/data.js"></script>
-<script src="js/app.js"></script>
+<!-- <script src="js/data.js"></script> -->
+<!-- <script src="js/app.js"></script> -->
 </body>
 </html>
 

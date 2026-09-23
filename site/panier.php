@@ -41,7 +41,7 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M19 12H5M12 5l-7 7 7 7"/>
       </svg>
-      Retour Ã  la carte
+      Retour à la carte
     </button>
     <div class="brand brand-md">
       <span>Resto</span><span> Web</span>
@@ -54,23 +54,23 @@
       <!-- GUIDE PHP : afficher ici le nombre total d'articles calcule depuis le panier serveur. -->
       <span class="cart-count" id="cart-count" style="display:none;"></span>
     </div>
-    <p class="cart-subtitle">VÃ©rifiez votre commande avant de passer au paiement.</p>
+    <p class="cart-subtitle">Vérifiez votre commande avant de passer au paiement.</p>
 
-    <!-- Ã‰tat "panier vide" : affichÃ©/masquÃ© par app.js selon le contenu du panier -->
+    <!-- État "panier vide" : affiché/masqué par app.js selon le contenu du panier -->
     <div id="cart-empty" class="cart-empty" style="display:none;">
-      <p class="emoji">ðŸ›’</p>
+      <p class="emoji">🛒</p>
       <p class="title">Votre panier est vide</p>
       <p class="sub">Explorez notre carte et choisissez vos plats.</p>
       <button type="button" data-nav="catalog">Voir la carte</button>
     </div>
 
-    <!-- Ã‰tat "panier rempli" -->
+    <!-- État "panier rempli" -->
     <div id="cart-content">
-      <!-- Tableau des articles : l'entÃªte est fixe (HTML), les lignes sont gÃ©nÃ©rÃ©es par app.js dans #cart-rows -->
+      <!-- Tableau des articles : l'entête est fixe (HTML), les lignes sont générées par app.js dans #cart-rows -->
       <div class="cart-table">
         <div class="cart-table-head">
           <span>Produit</span>
-          <span class="center">QuantitÃ©</span>
+          <span class="center">Quantité</span>
           <span class="right">PU HT</span>
           <span class="right">Total HT</span>
           <span></span>
@@ -86,49 +86,49 @@
       </div>
 
       <!--
-        Choix du mode de consommation (sur place / Ã  emporter).
+        Choix du mode de consommation (sur place / à emporter).
         Principe : on utilise deux vrais <input type="radio"> (accessibles,
         cochables au clavier) mais on les cache visuellement avec la classe
-        ".sr-only" (screen-reader only) ; c'est le <label> stylÃ© autour qui
-        sert de bouton visuel. app.js synchronise l'Ã©tat "selected" en CSS
-        avec l'Ã©tat rÃ©el de l'input radio.
+        ".sr-only" (screen-reader only) ; c'est le <label> stylé autour qui
+        sert de bouton visuel. app.js synchronise l'état "selected" en CSS
+        avec l'état réel de l'input radio.
       -->
       <div class="mode-box">
         <p class="mode-label"><span>Mode de consommation</span><span class="req">*</span></p>
         <div class="mode-options">
           <label class="mode-option" data-mode="surplace">
             <input type="radio" name="mode" value="surplace" class="sr-only" />
-            <span class="emoji">ðŸ½ï¸</span>
+            <span class="emoji">🏫</span>
             <div class="body">
               <p class="label">Sur place</p>
-              <p class="desc">Servi Ã  votre table</p>
+              <p class="desc">Servi à votre table</p>
               <p class="sub">TVA 10 %</p>
             </div>
-            <span class="check">âœ“</span>
+            <span class="check">✔</span>
           </label>
           <label class="mode-option" data-mode="emporter">
             <input type="radio" name="mode" value="emporter" class="sr-only" />
-            <span class="emoji">ðŸ¥¡</span>
+            <span class="emoji">🛍️</span>
             <div class="body">
-              <p class="label">Ã€ emporter</p>
-              <p class="desc">PrÃªt au comptoir</p>
+              <p class="label">À emporter</p>
+              <p class="desc">Prêt au comptoir</p>
               <p class="sub">TVA 5,5 %</p>
             </div>
-            <span class="check">âœ“</span>
+            <span class="check">✔</span>
           </label>
         </div>
       </div>
 
-      <!-- Totaux : les valeurs (0.00 â‚¬) sont des placeholders, recalculÃ©s par renderCart() dans app.js -->
+      <!-- Totaux : les valeurs (0.00 €) sont des placeholders, recalculés par renderCart() dans app.js -->
       <!-- GUIDE PHP : remplacer les placeholders des totaux par les montants calcules cote serveur. -->
       <div class="totals-box">
-        <div class="trow"><span class="label">Total HT</span><span class="value" id="cart-total-ht">0.00 â‚¬</span></div>
-        <div class="trow"><span class="label muted" id="cart-tva-label">TVA 10 % Â· sur place</span><span class="value muted" id="cart-tva-value">+ 0.00 â‚¬</span></div>
-        <div class="trow total-row"><span class="label">Total TTC</span><span class="value" id="cart-total-ttc">0.00 â‚¬</span></div>
+        <div class="trow"><span class="label">Total HT</span><span class="value" id="cart-total-ht">0.00 €</span></div>
+        <div class="trow"><span class="label muted" id="cart-tva-label">TVA 10 % · sur place</span><span class="value muted" id="cart-tva-value">+ 0.00 €</span></div>
+        <div class="trow total-row"><span class="label">Total TTC</span><span class="value" id="cart-total-ttc">0.00 €</span></div>
       </div>
 
       <!-- GUIDE PHP : ce bouton pourra envoyer vers paiement.php seulement si le panier serveur n'est pas vide. -->
-      <button type="button" class="btn-primary cart-pay-btn" id="cart-pay-btn">ProcÃ©der au paiement â†’</button>
+      <button type="button" class="btn-primary cart-pay-btn" id="cart-pay-btn">Procéder au paiement →</button>
     </div>
   </div>
 </div>

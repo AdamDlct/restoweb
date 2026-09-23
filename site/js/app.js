@@ -61,11 +61,11 @@ let orderMode = "surplace";          // "surplace" ou "emporter" â†’ change
 let orderId = Math.floor(Math.random() * 9000) + 1000; // NumÃ©ro de commande, gÃ©nÃ©rÃ© une seule fois au chargement
 const TVA_RATES = { emporter: 0.055, surplace: 0.10 };    // Taux de TVA franÃ§ais
 const PAGE_URLS = {
-  auth: "index.html",
-  catalog: "catalogue.html",
-  cart: "panier.html",
-  payment: "paiement.html",
-  tracking: "suivi-commande.html",
+  auth: "index.php",
+  catalog: "catalogue.php",
+  cart: "panier.php",
+  payment: "paiement.php",
+  tracking: "suivi-commande.php",
 };
 
 function loadState() {
@@ -178,6 +178,8 @@ document.querySelectorAll(".auth-tab").forEach((tab) => {
   tab.addEventListener("click", () => {
     authMode = tab.dataset.mode;
     const isRegister = authMode === "register";
+    const authModeInput = document.getElementById("auth-mode");
+    if (authModeInput) authModeInput.value = authMode;
 
     document.querySelectorAll(".auth-tab").forEach((t) => t.classList.toggle("active", t === tab));
     document.getElementById("field-login-register").classList.toggle("hidden-field", !isRegister);
@@ -203,12 +205,14 @@ document.querySelectorAll(".auth-tab").forEach((tab) => {
 // (aucun vrai compte n'est crÃ©Ã©, il n'y a pas de serveur derriÃ¨re ce site).
 if (document.getElementById("auth-form")) {
   document.getElementById("auth-form").addEventListener("submit", (e) => {
-  e.preventDefault(); // empÃªche le rechargement de page par dÃ©faut du <form>
+  const form = e.currentTarget;
   const errorEl = document.getElementById("auth-error");
   const login = document.getElementById("reg-login").value;
   const mainId = document.getElementById("main-id").value;
   const password = document.getElementById("password").value;
   const confirm = document.getElementById("confirm").value;
+  const authModeInput = document.getElementById("auth-mode");
+  if (authModeInput) authModeInput.value = authMode;
 
   let error = "";
   if (authMode === "register") {
@@ -219,12 +223,16 @@ if (document.getElementById("auth-form")) {
   }
 
   if (error) {
+    e.preventDefault();
     errorEl.textContent = error;
     errorEl.style.display = "block";
     return; // on arrÃªte ici : pas de navigation tant que le formulaire est invalide
   }
   errorEl.style.display = "none";
-  goTo("catalog");
+  if (form.method.toLowerCase() !== "post") {
+    e.preventDefault();
+    goTo("catalog");
+  }
   });
 }
 

@@ -1,56 +1,70 @@
 # RestoWeb
 
-RestoWeb est le front-office client du projet **AppResto**, une application de gestion 
-de commandes en restaurant développée dans le cadre du BTS SIO (Institut Limayrac).
+RestoWeb est le front-office client du projet **AppResto**, une application de gestion de commandes en restaurant developpee dans le cadre du BTS SIO (Institut Limayrac).
 
 ## Contexte
 
-AppResto remplace le service traditionnel (serveur, commande papier) par un système 
-informatisé, découpé en deux applications :
+AppResto remplace le service traditionnel (serveur, commande papier) par un systeme informatise, decoupe en deux applications :
 
-- **RestoWeb** (ce dépôt) : l'interface web utilisée par les clients pour consulter 
-  le menu et passer commande. Le client est notifié une fois sa commande prête et 
-  vient la récupérer au comptoir.
-- **RestoSwing** : le back-office du restaurateur (client lourd Java/Swing) permettant 
-  d'afficher, accepter, refuser et préparer les commandes.
+- **RestoWeb** (ce depot) : interface web utilisee par les clients pour consulter le menu, gerer leur panier, payer une commande et suivre son etat.
+- **RestoSwing** : back-office du restaurateur (client lourd Java/Swing) permettant d'afficher, accepter, refuser et preparer les commandes.
 
-## Fonctionnalités
+Le client est notifie lorsque sa commande est prete, puis vient la recuperer au comptoir.
 
-- Consultation du menu
-- Inscription / connexion
-- Passage et paiement de commande
-- Interface responsive (utilisable sur smartphone)
-- Communication avec RestoSwing via une API REST
+## Fonctionnalites
+
+- Consultation du menu et du catalogue
+- Ajout de produits au panier
+- Passage de commande
+- Paiement de commande
+- Suivi de commande
+- Interface responsive utilisable sur smartphone
+- Scripts SQL pour la base de donnees et les tests du panier
+- Communication prevue avec RestoSwing via une API REST
 
 ## Technologies
 
-PHP · HTML · CSS · MariaDB · API REST
+PHP - HTML - CSS - JavaScript - MariaDB - API REST
 
-## Structure du dépôt
+## Structure du depot
 
-```
+```text
 restoweb/
-├── docs/          Diagrammes de conception (MCD, MLD, DA, DCU, sitemap)
-├── database/      Scripts SQL (modèle physique de données)
-└── app/           Prototype d'interface (React/Vite/TS, généré via Figma Make)
+|-- docs/          Diagrammes de conception (MCD, MLD, DA, DCU, sitemap)
+|-- database/      Scripts SQL (modele physique, triggers et donnees de test)
+`-- site/          Code source PHP, CSS, JavaScript et assets de l'application
 ```
 
-Le code source PHP de l'application finale n'est pas encore versionné ; le dossier
-[`app/`](./app) contient pour l'instant un prototype d'interface utilisateur.
+## Pages principales
+
+- [`site/index.php`](./site/index.php) : page d'accueil
+- [`site/catalogue.php`](./site/catalogue.php) : consultation du catalogue
+- [`site/panier.php`](./site/panier.php) : gestion du panier
+- [`site/paiement.php`](./site/paiement.php) : paiement de la commande
+- [`site/suivi-commande.php`](./site/suivi-commande.php) : suivi de commande
 
 ## Documentation
 
-L'ensemble de la documentation de conception (diagrammes, modèles de données) est
-disponible dans le dossier [`docs/`](./docs). Les scripts SQL se trouvent dans
-[`database/`](./database).
+La documentation de conception est disponible dans le dossier [`docs/`](./docs).
 
-Compte utilisateur de test par défaut : 
-  ```
-  login     : jef
-  password  : jef 
-  email     : jef@restoswing.lim
-  ```
+Les scripts SQL sont disponibles dans le dossier [`database/`](./database) :
+
+- [`MPD_VPROF.sql`](./database/MPD_VPROF.sql) : modele physique de donnees
+- [`triggers_panier.sql`](./database/triggers_panier.sql) : triggers lies au panier
+- [`insert_panier_test.sql`](./database/insert_panier_test.sql) : donnees de test pour le panier
+
+## Organisation du projet
+
+Tableau Trello : [https://trello.com/b/5GMubaY0/ap-2](https://trello.com/b/5GMubaY0/ap-2)
+
+## Compte de test
+
+```text
+login    : jef
+password : jef
+email    : jef@restoswing.lim
+```
 
 ## Licence
 
-Projet pédagogique — Institut Limayrac, tous droits réservés.
+Projet pedagogique - Institut Limayrac, tous droits reserves.

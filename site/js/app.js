@@ -58,14 +58,14 @@ function qtyStepper(qty, onDec, onInc) {
 
 let cart = [];                       // Panier : liste de { id, name, priceHT, qty }
 let orderMode = "surplace";          // "surplace" ou "emporter" â†’ change le taux de TVA
-let orderId = Math.floor(Math.random() * 9000) + 1000; // NumÃ©ro de commande, gÃ©nÃ©rÃ© une seule fois au chargement
+// let orderId = Math.floor(Math.random() * 9000) + 1000; // Numéro de commande, généré une seule fois au chargement
 const TVA_RATES = { emporter: 0.055, surplace: 0.10 };    // Taux de TVA franÃ§ais
 const PAGE_URLS = {
-  auth: "index.html",
-  catalog: "catalogue.html",
-  cart: "panier.html",
-  payment: "paiement.html",
-  tracking: "suivi-commande.html",
+  auth: "index.php",
+  catalog: "catalogue.php",
+  cart: "panier.php",
+  payment: "paiement.php",
+  tracking: "suivi-commande.php",
 };
 
 function loadState() {
@@ -178,6 +178,8 @@ document.querySelectorAll(".auth-tab").forEach((tab) => {
   tab.addEventListener("click", () => {
     authMode = tab.dataset.mode;
     const isRegister = authMode === "register";
+    const authModeInput = document.getElementById("auth-mode");
+    if (authModeInput) authModeInput.value = authMode;
 
     document.querySelectorAll(".auth-tab").forEach((t) => t.classList.toggle("active", t === tab));
     document.getElementById("field-login-register").classList.toggle("hidden-field", !isRegister);
@@ -203,12 +205,14 @@ document.querySelectorAll(".auth-tab").forEach((tab) => {
 // (aucun vrai compte n'est crÃ©Ã©, il n'y a pas de serveur derriÃ¨re ce site).
 if (document.getElementById("auth-form")) {
   document.getElementById("auth-form").addEventListener("submit", (e) => {
-  e.preventDefault(); // empÃªche le rechargement de page par dÃ©faut du <form>
+  const form = e.currentTarget;
   const errorEl = document.getElementById("auth-error");
   const login = document.getElementById("reg-login").value;
   const mainId = document.getElementById("main-id").value;
   const password = document.getElementById("password").value;
   const confirm = document.getElementById("confirm").value;
+  const authModeInput = document.getElementById("auth-mode");
+  if (authModeInput) authModeInput.value = authMode;
 
   let error = "";
   if (authMode === "register") {
@@ -219,12 +223,16 @@ if (document.getElementById("auth-form")) {
   }
 
   if (error) {
+    e.preventDefault();
     errorEl.textContent = error;
     errorEl.style.display = "block";
     return; // on arrÃªte ici : pas de navigation tant que le formulaire est invalide
   }
   errorEl.style.display = "none";
-  goTo("catalog");
+  if (form.method.toLowerCase() !== "post") {
+    e.preventDefault();
+    goTo("catalog");
+  }
   });
 }
 
@@ -489,10 +497,10 @@ if (document.getElementById("payment-form")) {
 // passer automatiquement Ã  la suivante (0 = derniÃ¨re Ã©tape, pas de suite).
 
 const STATES = [
-  { key: "attente", label: "En attente", emoji: "â³", color: "#9e8878", duration: 4000, desc: "Votre commande a Ã©tÃ© reÃ§ue et est en file d'attente.", eta: "~15 min" },
-  { key: "preparation", label: "En prÃ©paration", emoji: "ðŸ‘¨â€ðŸ³", color: "#e8c27a", duration: 6000, desc: "Nos cuisiniers prÃ©parent votre repas avec soin.", eta: "~8 min" },
-  { key: "prete", label: "PrÃªte !", emoji: "ðŸ””", color: "#e8845a", duration: 5000, eta: "Maintenant" },
-  { key: "servie", label: "Servie", emoji: "âœ…", color: "#4caf76", duration: 0, desc: "Merci pour votre visite. Ã€ trÃ¨s bientÃ´t !", eta: "â€”" },
+  { key: "attente", label: "En attente", emoji: "⏳", color: "#9e8878", duration: 4000, desc: "Votre commande a été reçue et est en file d'attente.", eta: "~15 min" },
+  { key: "preparation", label: "En préparation", emoji: "👨‍🍳", color: "#e8c27a", duration: 6000, desc: "Nos cuisiniers préparent votre repas avec soin.", eta: "~8 min" },
+  { key: "prete", label: "Prête !", emoji: "🔔", color: "#e8845a", duration: 5000, eta: "Maintenant" },
+  { key: "servie", label: "Servie", emoji: "✅", color: "#4caf76", duration: 0, desc: "Merci pour votre visite. À très bientôt !", eta: "—" },
 ];
 
 let trackingStateIdx = 0;      // index de l'Ã©tape courante dans STATES
@@ -507,7 +515,7 @@ function renderTrackingSteps() {
   STATES.forEach((s, i) => {
     const done = i < trackingStateIdx;    // Ã©tape dÃ©jÃ  passÃ©e
     const active = i === trackingStateIdx; // Ã©tape en cours
-    const circle = h("div", "step-circle", done ? "âœ“" : s.emoji);
+    const circle = h("div", "step-circle", done ? "✓" : s.emoji);
     circle.style.background = done ? s.color : active ? "rgba(232,132,90,0.15)" : "var(--secondary)";
     circle.style.border = "2px solid " + (active || done ? s.color : "var(--border)");
     circle.style.boxShadow = active ? "0 0 16px " + s.color + "44" : "none";
@@ -523,27 +531,27 @@ function renderTracking() {
   if (!document.getElementById("tracking-order-id")) return;
   const current = STATES[trackingStateIdx];
 
-  document.getElementById("tracking-order-id").textContent = "#" + orderId;
-  document.getElementById("detail-order-id").textContent = "#" + orderId;
+  // document.getElementById("tracking-order-id").textContent = "#" + orderId;
+  // document.getElementById("detail-order-id").textContent = "#" + orderId;
   document.getElementById("status-emoji").textContent = current.emoji;
   document.getElementById("status-emoji").style.filter = "drop-shadow(0 0 24px " + current.color + "66)";
   document.getElementById("status-blob").style.background = current.color;
 
   const title = document.getElementById("status-title");
   title.textContent = "";
-  if (current.key === "prete") append(title, document.createTextNode("Commande "), h("em", null, "prÃªte !"));
-  else if (current.key === "servie") append(title, document.createTextNode("Bon "), h("em", null, "appÃ©tit !"));
+  if (current.key === "prete") append(title, document.createTextNode("Commande "), h("em", null, "prête !"));
+  else if (current.key === "servie") append(title, document.createTextNode("Bon "), h("em", null, "appétit !"));
   else title.appendChild(h("em", null, current.label));
   title.querySelector("em").style.color = current.key === "servie" ? "#4caf76" : "var(--accent)";
 
   document.getElementById("status-desc").textContent = current.key === "prete"
-    ? (orderMode === "surplace" ? "Votre plat arrive Ã  votre table dans un instant." : "Venez rÃ©cupÃ©rer votre commande au comptoir !")
+    ? (orderMode === "surplace" ? "Votre plat arrive à  votre table dans un instant." : "Venez récupérer votre commande au comptoir !")
     : current.desc;
 
   const notif = document.getElementById("tracking-notif");
   if (current.key === "prete") {
     document.getElementById("tracking-notif-text").textContent =
-      orderMode === "surplace" ? "Votre plat arrive !" : "PrÃªt Ã  Ãªtre rÃ©cupÃ©rÃ© au comptoir !";
+      orderMode === "surplace" ? "Votre plat arrive !" : "Prêt à  être récupéré au comptoir !";
     setTimeout(() => notif.classList.add("visible"), 400); // lÃ©ger dÃ©lai pour un effet d'apparition
   } else {
     notif.classList.remove("visible");
@@ -555,7 +563,7 @@ function renderTracking() {
 
   renderTrackingSteps();
 
-  document.getElementById("detail-mode").textContent = orderMode === "surplace" ? "ðŸ½ï¸ Sur place" : "ðŸ¥¡ Ã€ emporter";
+  document.getElementById("detail-mode").textContent = orderMode === "surplace" ? "🍽️ Sur place" : "🥡 À emporter";
   const statusPill = document.getElementById("detail-status");
   statusPill.style.background = current.color + "18"; // "18" = transparence ajoutÃ©e au code couleur hexadÃ©cimal
   statusPill.style.color = current.color;

@@ -12,7 +12,7 @@ $id_etat        = $commande["id_etat"];
 $date_commande  = $commande["date_commande"];
 $total_commande = $commande["total_commande"];
 // $type_conso     = $commande["type_conso"];
-$type_conso     = 1;
+$type_conso     = 0;
 
 
 print_r($rows)
@@ -56,7 +56,7 @@ print_r($rows)
       <span>Resto</span><span> Web</span>
     </div>
     <!-- GUIDE PHP : remplacer #0000 par le numero de commande lu depuis la base. -->
-    <span class="order-badge" id="tracking-order-id"><?= $id_commande ?></span>
+    <span class="order-badge" id="tracking-order-id"><?php echo "#"; printf("%04d", $id_commande) ?></span>
   </header>
 
   <div class="tracking-body">
@@ -110,13 +110,13 @@ print_r($rows)
           -->
           <div>
             <p class="dt-label">Commande</p>
-            <p class="dt-value accent" id="detail-order-id">#0000</p>
+            <p class="dt-value accent" id="detail-order-id"><?php echo "#"; printf("%04d", $id_commande) ?></p>
           </div>
           <div>
             <p class="dt-label">Mode</p>
             <?php 
             
-            echo $type_conso ? "<p class='dt-value' id='detail-mode'>🏫 Sur place</p>" : "<p class='dt-value' id='detail-mode'>🏫 Sur place</p>";
+            echo $type_conso ? "<p class='dt-value' id='detail-mode'>🍽️ Sur place</p>" : "<p class='dt-value' id='detail-mode'>🥡 A emporter</p>";
             
             ?>
             
@@ -144,8 +144,8 @@ print_r($rows)
 </div>
 
 
-<!-- <script src="js/data.js"></script> -->
-<!-- <script src="js/app.js"></script> -->
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
 

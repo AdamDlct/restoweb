@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Resto Web</title>
+<!-- Une seule feuille de style pour tout le site : voir css/style.css -->
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- Page Suivi de commande extraite de l'ancienne SPA index.html. -->
+<div id="page-tracking" class="page active">
+  <header class="tracking-header">
+    <div class="brand brand-lg">
+      <span>Resto</span><span> Web</span>
+    </div>
+    <span class="order-badge" id="tracking-order-id">#0000</span>
+  </header>
+
+  <div class="tracking-body">
+    <!-- Colonne gauche : statut courant + barre de progression -->
+    <div class="tracking-left">
+      <div class="status-card">
+        <!-- Halo de couleur en fond, purement décoratif -->
+        <div class="status-glow"><div class="blob" id="status-blob"></div></div>
+        <div class="status-content">
+          <span class="status-emoji" id="status-emoji">⏳</span>
+          <h1 class="status-title" id="status-title">En attente</h1>
+          <p class="status-desc" id="status-desc">Votre commande a été reçue et est en file d'attente.</p>
+        </div>
+      </div>
+
+      <!-- Notification "commande prête" : masquée par défaut, affichée par app.js à la bonne étape -->
+      <div class="notif" id="tracking-notif">
+        <span class="icon">🔔</span>
+        <span class="text" id="tracking-notif-text">Votre plat arrive !</span>
+      </div>
+
+      <div class="progress-box">
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <!-- Les 4 étapes (⏳ 👨‍🍳 🔔 ✅) sont générées par app.js à partir du tableau STATES -->
+        <div class="steps-row" id="steps-row"></div>
+      </div>
+
+      <!-- Visible uniquement à la toute dernière étape ("servie") -->
+      <button type="button" class="new-order-btn" id="new-order-btn">Nouvelle commande</button>
+    </div>
+
+    <!-- Colonne droite : détails de la commande + photo décorative -->
+    <div class="tracking-right">
+      <div class="details-card">
+        <h3>Détails</h3>
+        <div class="details-grid">
+          <div>
+            <p class="dt-label">Commande</p>
+            <p class="dt-value accent" id="detail-order-id">#0000</p>
+          </div>
+          <div>
+            <p class="dt-label">Mode</p>
+            <p class="dt-value" id="detail-mode">🍽️ Sur place</p>
+          </div>
+          <div class="full">
+            <p class="dt-label">Statut</p>
+            <span class="status-pill" id="detail-status">⏳ En attente</span>
+          </div>
+          <div class="full">
+            <p class="dt-label">Temps estimé</p>
+            <p class="dt-value mono" id="detail-eta">~15 min</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="food-photo">
+        <img src="https://images.unsplash.com/photo-1675670601305-3e04ec45430f?w=600&h=400&fit=crop&auto=format" alt="Plat gastronomique Resto Web" />
+        <div class="food-photo-gradient"></div>
+        <div class="food-photo-text">
+          <p>Cuisine de saison · Produits locaux</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

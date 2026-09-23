@@ -44,6 +44,13 @@ L'ensemble de la documentation de conception (diagrammes, modèles de données) 
 disponible dans le dossier [`docs/`](./docs). Les scripts SQL se trouvent dans
 [`database/`](./database).
 
+Compte utilisateur de test par défaut : 
+  ```
+  login     : jef
+  password  : jef 
+  email     : jef@restoswing.lim
+  ```
+
 ## Licence
 
 Projet pédagogique — Institut Limayrac, tous droits réservés.

@@ -37,3 +37,6 @@ CREATE TABLE ligne_commande(
    FOREIGN KEY(id_commande) REFERENCES commande(id_commande),
    FOREIGN KEY(id_produit) REFERENCES produit(id_produit)
 );
+
+INSERT INTO utilisateur(login, password, email) 
+VALUES ("jef", "jef", "jef@restoswing.lim");

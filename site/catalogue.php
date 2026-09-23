@@ -58,7 +58,7 @@
 
   <!-- Bannière photo -->
   <div class="catalog-hero">
-    <img src="https://images.unsplash.com/photo-1657593088889-5105c637f2a8?w=1400&h=500&fit=crop&auto=format" alt="Salle du restaurant Resto Web" />
+    <img src="images/backcatalogue.png" alt="Salle du restaurant Resto Web" />
     <div class="catalog-hero-gradient"></div>
     <div class="catalog-hero-text">
       <h1>Notre <em>carte</em></h1>

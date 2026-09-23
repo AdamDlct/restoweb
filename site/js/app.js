@@ -56,7 +56,7 @@ function qtyStepper(qty, onDec, onInc) {
 // Ces variables dÃ©crivent l'Ã©tat courant du "faux backend" cÃ´tÃ© client.
 // Elles sont lues et modifiÃ©es par plusieurs pages (catalogue, panier, paiement).
 
-let cart = [];                       // Panier : liste de { id, name, priceHT, qty }
+let cart = [];                       // Panier : une entrée par unité ajoutée
 let orderMode = "surplace";          // "surplace" ou "emporter" â†’ change le taux de TVA
 // let orderId = Math.floor(Math.random() * 9000) + 1000; // Numéro de commande, généré une seule fois au chargement
 const TVA_RATES = { emporter: 0.055, surplace: 0.10 };    // Taux de TVA franÃ§ais
@@ -71,6 +71,15 @@ const PAGE_URLS = {
 function loadState() {
   try {
     cart = JSON.parse(localStorage.getItem("restoweb_cart")) || [];
+    // Conversion des anciens paniers : une quantité de 3 devient 3 lignes séparées.
+    cart = cart.flatMap((item) => {
+      const qty = Math.max(1, Number(item.qty) || 1);
+      return Array.from({ length: qty }, (_, index) => ({
+        ...item,
+        qty: 1,
+        lineId: item.lineId || `${item.id}-${Date.now()}-${index}-${Math.random().toString(36).slice(2)}`,
+      }));
+    });
     orderMode = localStorage.getItem("restoweb_order_mode") || "surplace";
     orderId = Number(localStorage.getItem("restoweb_order_id")) || orderId;
   } catch (error) {
@@ -115,23 +124,31 @@ document.querySelectorAll("[data-nav]").forEach((elt) => elt.addEventListener("c
 // du "rendu visuel".
 
 function addToCart(item) {
-  const existing = cart.find((c) => c.id === item.id);
-  if (existing) existing.qty += item.qty; // produit dÃ©jÃ  prÃ©sent â†’ on additionne les quantitÃ©s
-  else cart.push(item);                   // sinon on l'ajoute comme nouvelle ligne
+  // Chaque unité est une ligne distincte, même lorsqu'il s'agit du même plat.
+  Array.from({ length: item.qty }, (_, index) => {
+    cart.push({
+      ...item,
+      qty: 1,
+      lineId: `${item.id}-${Date.now()}-${index}-${Math.random().toString(36).slice(2)}`,
+    });
+  });
   saveState();
   updateCartBadges();
 }
 
-function updateQty(id, qty) {
-  if (qty <= 0) cart = cart.filter((c) => c.id !== id); // quantitÃ© Ã  0 â†’ on retire l'article
-  else cart.find((c) => c.id === id).qty = qty;
+function updateQty(lineId, qty) {
+  if (qty <= 0) cart = cart.filter((c) => c.lineId !== lineId);
+  else {
+    const item = cart.find((c) => c.lineId === lineId);
+    if (item) item.qty = qty;
+  }
   saveState();
   updateCartBadges();
   renderCart();
 }
 
-function removeItem(id) {
-  cart = cart.filter((c) => c.id !== id);
+function removeItem(lineId) {
+  cart = cart.filter((c) => c.lineId !== lineId);
   saveState();
   updateCartBadges();
   renderCart();
@@ -350,11 +367,12 @@ document.querySelectorAll(".mode-option").forEach((opt) => {
 // Construit UNE ligne du tableau du panier.
 function buildCartRow(item, index, isLast) {
   const stepper = qtyStepper(item.qty,
-    () => updateQty(item.id, item.qty - 1),
-    () => updateQty(item.id, item.qty + 1));
+    () => updateQty(item.lineId, item.qty - 1),
+    // Le "+" crée une nouvelle ligne d'une unité au lieu d'augmenter celle-ci.
+    () => { addToCart({ id: item.id, name: item.name, priceHT: item.priceHT, qty: 1 }); renderCart(); });
   const removeBtn = h("button", "remove-btn", "âœ•");
   removeBtn.type = "button";
-  removeBtn.addEventListener("click", () => removeItem(item.id));
+  removeBtn.addEventListener("click", () => removeItem(item.lineId));
 
   const row = append(h("div", "cart-row"),
     h("span", "item-name", item.name),

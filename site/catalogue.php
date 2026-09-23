@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
   ============================================================================
   INTEGRATION PHP - PAGE CATALOGUE / CHOIX DES PRODUITS

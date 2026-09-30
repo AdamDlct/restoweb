@@ -581,7 +581,7 @@ function renderTracking() {
 
   renderTrackingSteps();
 
-  document.getElementById("detail-mode").textContent = orderMode === "surplace" ? "🍽️ Sur place" : "🥡 À emporter";
+  // document.getElementById("detail-mode").textContent = orderMode === "surplace" ? "🍽️ Sur place" : "🥡 À emporter";
   const statusPill = document.getElementById("detail-status");
   statusPill.style.background = current.color + "18"; // "18" = transparence ajoutée au code couleur hexadécimal
   statusPill.style.color = current.color;

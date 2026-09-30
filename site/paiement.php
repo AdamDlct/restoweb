@@ -110,6 +110,7 @@ $sur_place = ($commande['type_conso'] == 1);
       </svg>
       Retour au panier
     </a>
+    <a href="deconnexion.php" class="catalog-cart-btn" style="margin-left: auto; margin-right: 10px; text-decoration:none;">Se déconnecter</a>
     <div class="brand brand-md">
       <span>Resto</span><span> Web</span>
     </div>

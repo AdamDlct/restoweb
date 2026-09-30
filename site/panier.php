@@ -184,6 +184,7 @@ $type_conso = $commande ? $commande['type_conso'] : 1;
       </svg>
       Retour à la carte
     </a>
+    <a href="deconnexion.php" class="catalog-cart-btn" style="margin-left: auto; margin-right: 10px; text-decoration:none;">Se déconnecter</a>
     <div class="brand brand-md">
       <span>Resto</span><span> Web</span>
     </div>

@@ -133,7 +133,7 @@ $commande = $rows[0];
               <p class="dt-label">Mode</p>
               <?php
 
-              echo $type_conso ? "<p class='dt-value'>🍽️ Sur feur</p>" : "<p class='dt-value'>🥡 A emporter</p>";
+              echo $type_conso ? "<p class='dt-value'>🍽️ Sur place</p>" : "<p class='dt-value'>🥡 A emporter</p>";
               ?>
 
             </div>

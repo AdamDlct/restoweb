@@ -58,19 +58,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // 3a. Bouton "+" : une unite de plus du meme produit = une nouvelle ligne
   if ($action == 'plus' && $commande) {
-    $sth = $dbh->prepare("SELECT id_produit FROM ligne_commande WHERE id_ligne_commande = :id_ligne AND id_commande = :id_commande");
+    $sth = $dbh->prepare("SELECT id_produit, qte FROM ligne_commande WHERE id_ligne_commande = :id_ligne AND id_commande = :id_commande");
     $sth->execute(array(':id_ligne' => $id_ligne, ':id_commande' => $commande['id_commande']));
     $ligne = $sth->fetch(PDO::FETCH_ASSOC);
 
     if ($ligne) {
-      ajouter_au_panier($dbh, $id_user, $ligne['id_produit'], 1);
+      ajouter_au_panier($dbh, $id_user, $ligne['id_produit'], $ligne['qte']);
     }
   }
 
   // 3b. Bouton "-" ou "✕" : on retire cette unite = on supprime la ligne
-  if (($action == 'moins' || $action == 'supprimer') && $commande) {
+  if ($action == 'supprimer' && $commande) {
     $sth = $dbh->prepare("DELETE FROM ligne_commande WHERE id_ligne_commande = :id_ligne AND id_commande = :id_commande");
     $sth->execute(array(':id_ligne' => $id_ligne, ':id_commande' => $commande['id_commande']));
+  }
+
+  if (($action == 'moins') && $commande) {
+    $sth = $dbh->prepare("SELECT id_produit, qte FROM ligne_commande WHERE id_ligne_commande = :id_ligne AND id_commande = :id_commande");
+    $sth->execute(array(':id_ligne' => $id_ligne, ':id_commande' => $commande['id_commande']));
+    $ligne = $sth->fetch(PDO::FETCH_ASSOC);
+
+    if ($ligne && $ligne['qte'] > 1) {
+      $sth = $dbh->prepare("UPDATE ligne_commande SET qte=:newqte WHERE id_produit = :id_produit;");
+      $sth->execute(array(':newqte' => $ligne['qte'] - 1, ':id_produit' => $ligne['id_produit']));
+    } else {
+      $sth = $dbh->prepare("DELETE FROM ligne_commande WHERE id_ligne_commande = :id_ligne AND id_commande = :id_commande");
+      $sth->execute(array(':id_ligne' => $id_ligne, ':id_commande' => $commande['id_commande']));
+    }
   }
 
   // 3c. Mode de consommation : 1 = sur place, 0 = a emporter

@@ -55,8 +55,8 @@ function ajouter_au_panier($dbh, $id_user, $id_produit, $qte)
     $id_commande = $dbh->lastInsertId();
   }
   
-  $sth_lc = $dbh->prepare("SELECT id_ligne_commande FROM ligne_commande WHERE id_produit = :id_produit");
-  $sth_lc->execute(array(':id_produit' => $id_produit));
+  $sth_lc = $dbh->prepare("SELECT id_ligne_commande FROM ligne_commande WHERE id_produit = :id_produit AND id_commande = :id_commande");
+  $sth_lc->execute(array(':id_produit' => $id_produit, ':id_commande' => $id_commande));
 
   if (!$sth_lc->fetch()) {
     $sth = $dbh->prepare("INSERT INTO ligne_commande (qte, id_commande, id_produit) VALUES (:qte, :id_commande, :id_produit)");
@@ -64,6 +64,7 @@ function ajouter_au_panier($dbh, $id_user, $id_produit, $qte)
   } else {
     $sth2 = $dbh->prepare("UPDATE ligne_commande SET qte=:newqte WHERE id_produit = :id_produit;");
     $sth2->execute(array(':newqte' => $qte + 1, ':id_produit' => $id_produit));
+    
 
 
 }

@@ -45,6 +45,7 @@ function ajouter_au_panier($dbh, $id_user, $id_produit, $qte)
     return;
   }
 
+  // Panier en cours, ou creation d'un nouveau panier
   $commande = panier_en_cours($dbh, $id_user);
   if ($commande) {
     $id_commande = $commande['id_commande'];
@@ -64,10 +65,6 @@ function ajouter_au_panier($dbh, $id_user, $id_produit, $qte)
     $sth2 = $dbh->prepare("UPDATE ligne_commande SET qte=:newqte WHERE id_produit = :id_produit;");
     $sth2->execute(array(':newqte' => $qte + 1, ':id_produit' => $id_produit));
 
-  // Panier en cours, ou creation d'un nouveau panier
-
-
-  // Une ligne par unite (qte = 1) ; total_ligne_ht est calcule par le trigger
 
 }
 

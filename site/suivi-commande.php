@@ -6,7 +6,7 @@ session_start();
 // $user_id = isset($_SESSION["id_user"]) ?? "";
 $user_id = 1; //tests
 
-$sql = 'SELECT * FROM commande WHERE id_user = :id_user';
+$sql = 'SELECT * FROM commande WHERE id_user = :id_user ORDER BY id_commande DESC LIMIT 1;';
 
 try {
   $dbh = db_connect();

@@ -66,3 +66,10 @@ FROM commande c, ligne_commande l
 WHERE c.id_commande = l.id_commande
 AND c.id_etat = 1
 GROUP BY c.id_commande;
+
+commande détail
+
+SELECT l.id_ligne_commande, p.libelle, l.qte
+FROM ligne_commande l, produit p
+WHERE l.id_produit = p.id_produit
+AND l.id_commande = 3;

@@ -2,16 +2,23 @@
 session_start();
 include("../../../db_functions.php");
 
-$dbh = db_connect();
+try {
+    $dbh = db_connect();
 
-$sql = "SELECT DISTINCT c.id_commande, c.date_commande, c.id_etat, SUM(l.qte) AS Total
-        FROM commande c, ligne_commande l
-        WHERE c.id_commande = l.id_commande
-        AND c.id_etat = 1
-        GROUP BY c.id_commande;";
+    $sql = "SELECT DISTINCT c.id_commande, c.date_commande, c.id_etat, SUM(l.qte) AS Total
+            FROM commande c, ligne_commande l
+            WHERE c.id_commande = l.id_commande
+            AND c.id_etat = 1
+            GROUP BY c.id_commande;
+            ";
 
-$stmt = $dbh->query($sql);
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $dbh->query($sql);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+        $rows = "";
+        echo "Erreur dans le SQL, " . $e->getMessage();
+}
 
 $json = json_encode($rows);
 

@@ -2,18 +2,24 @@
 session_start();
 include("../../../db_functions.php");
 
-$dbh = db_connect();
+$id_commande = $_GET['id_commande'] ?? null;
 
-$sql = "SELECT l.id_ligne_commande, p.libelle, l.qte
+try {
+    $dbh = db_connect();
+
+    $sql = "SELECT l.id_ligne_commande, p.libelle, l.qte
         FROM ligne_commande l, produit p
         WHERE l.id_produit = p.id_produit
-        AND l.id_commande = :id;";
+        AND l.id_commande = :id_commande;
+            ";
 
-$id_commande = $_GET['id'] ?? null;
-
-$stmt = $dbh->prepare($sql);
-$stmt->execute(array(":id" => $id_commande));
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute(array(":id_commande" => $id_commande));
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $rows = "";
+    echo "Erreur dans le SQL, " . $e->getMessage();
+}
 
 $json = json_encode($rows);
 

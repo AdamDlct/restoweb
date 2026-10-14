@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Colonne gauche : photo d'ambiance + texte d'accroche (cachée en dessous de 1024px, voir media query CSS) -->
     <div class="auth-hero">
-      <img src="https://images.unsplash.com/photo-1469234496837-d0101f54be3e?w=900&h=1200&fit=crop&auto=format" alt="Ambiance Resto Web, verres de vin sur table en bois" />
+      <img src="images/Ambience Fond - restoweb.avif" alt="Ambiance Resto Web, verres de vin sur table en bois" />
       <!-- Dégradé sombre posé au-dessus de la photo pour que le texte reste lisible -->
       <div class="auth-hero-gradient"></div>
       <div class="auth-hero-content">

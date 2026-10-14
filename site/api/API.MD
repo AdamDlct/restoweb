@@ -59,3 +59,10 @@ puis `README.md` pour ajouter un lien vers la documentation.
 ## Vérification en équipe
 
 Avant de considérer le lot terminé, testons ensemble une liste vide et une liste avec des commandes, les trois changements d'état, un identifiant invalide et une action répétée. Le but est de vérifier à la fois ce que reçoit RestoSwing et ce qui a réellement été enregistré dans la base de données.
+
+
+SELECT DISTINCT c.id_commande, c.date_commande, c.id_etat, SUM(l.qte)
+FROM commande c, ligne_commande l
+WHERE c.id_commande = l.id_commande
+AND c.id_etat = 1
+GROUP BY c.id_commande;

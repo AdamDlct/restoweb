@@ -149,7 +149,7 @@ $commande = $rows[0];
         </div>
 
         <div class="food-photo">
-          <img src="https://images.unsplash.com/photo-1675670601305-3e04ec45430f?w=600&h=400&fit=crop&auto=format"
+          <img src="images/Plat gastronomique Resto Web - suivi.avif"
             alt="Plat gastronomique Resto Web" />
           <div class="food-photo-gradient"></div>
           <div class="food-photo-text">

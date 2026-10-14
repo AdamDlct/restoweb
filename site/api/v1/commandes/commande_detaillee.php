@@ -2,7 +2,7 @@
 session_start();
 include("../../../db_functions.php");
 
-$id_commande = $_GET['id'] ?? null;
+$id_commande = $_GET['id_commande'] ?? null;
 
 try {
     $dbh = db_connect();
@@ -10,11 +10,11 @@ try {
     $sql = "SELECT l.id_ligne_commande, p.libelle, l.qte
         FROM ligne_commande l, produit p
         WHERE l.id_produit = p.id_produit
-        AND l.id_commande = :id;
+        AND l.id_commande = :id_commande;
             ";
 
     $stmt = $dbh->prepare($sql);
-    $stmt->execute(array(":id" => $id_commande));
+    $stmt->execute(array(":id_commande" => $id_commande));
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $rows = "";

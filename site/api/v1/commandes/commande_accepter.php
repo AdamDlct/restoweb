@@ -1,74 +1,83 @@
 <?php
 /*
- * Accepte une commande payée en attente pour la transmettre à la cuisine.
- * Transition autorisée : id_etat 1 (en attente) -> 2 (en préparation).
- * RestoSwing appelle cet endpoint en GET avec le paramètre id_commande.
+ * Cet endpoint permet à RestoSwing d'accepter une commande.
+ * Seule une commande payée et en attente (état 1) peut passer
+ * en préparation (état 2).
  */
+
+// Annoncer que la réponse utilise le format JSON et ne doit pas être mise en cache.
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 
-// Centralise le code HTTP et le JSON de succès. Sans données, la réponse reste vide,
-// comme le prévoit le contrat du lot pour les erreurs.
-$repondre = static function (int $statut, ?array $donnees = null): void {
-  http_response_code($statut);
-  if ($donnees !== null) {
-    echo json_encode($donnees, JSON_UNESCAPED_UNICODE);
-  }
-  exit;
-};
-
-// RestoSwing appelle cet endpoint en GET, conformément au contrat du lot 5.
+// RestoSwing appelle cette adresse avec GET. Les autres méthodes ne sont pas acceptées.
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
   header('Allow: GET');
-  $repondre(405);
+  http_response_code(405);
+  exit;
 }
 
-// L'identifiant doit être un entier strictement positif avant toute requête SQL.
-// La vérification de type rejette aussi les paramètres reçus sous forme de tableau.
-$idCommandeBrut = $_GET['id_commande'] ?? null;
-$idCommande = is_string($idCommandeBrut)
-  ? filter_var($idCommandeBrut, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])
-  : false;
+// Lire le numéro transmis dans l'URL, par exemple ?id_commande=12.
+$idCommandeBrute = $_GET['id_commande'] ?? null;
+
+// Vérifier qu'il s'agit d'un entier positif. On rejette aussi un paramètre
+// manquant, du texte ou une valeur envoyée sous forme de tableau.
+if (!is_string($idCommandeBrute)) {
+  http_response_code(400);
+  exit;
+}
+$idCommande = filter_var(
+  $idCommandeBrute,
+  FILTER_VALIDATE_INT,
+  ['options' => ['min_range' => 1]]
+);
 
 if ($idCommande === false) {
-  $repondre(400);
+  http_response_code(400);
+  exit;
 }
 
+// Charger la fonction qui ouvre la connexion PDO à la base de données.
 require_once dirname(__DIR__, 3) . '/db_functions.php';
 
 try {
-  $dbh = db_connect(true);
+  // Le paramètre true laisse l'API gérer elle-même les erreurs de connexion.
+  $connexion = db_connect(true);
 
-  // La condition sur l'état empêche une seconde acceptation ou une transition incorrecte.
-  $requete = $dbh->prepare(
+  // Changer l'état seulement si la commande existe et est encore en attente.
+  // Le paramètre :id est lié séparément à la requête pour sécuriser l'identifiant.
+  $miseAJour = $connexion->prepare(
     'UPDATE commande
      SET id_etat = 2
-     WHERE id_commande = :id_commande AND id_etat = 1'
+     WHERE id_commande = :id AND id_etat = 1'
   );
-  $requete->execute([':id_commande' => $idCommande]);
+  $miseAJour->execute([':id' => $idCommande]);
 
-  if ($requete->rowCount() === 0) {
-    // Aucune ligne modifiée : distinguer une commande absente (404) d'un état
-    // différent de 1 (409), notamment lors d'une seconde tentative d'acceptation.
-    $verification = $dbh->prepare('SELECT id_etat FROM commande WHERE id_commande = :id_commande');
-    $verification->execute([':id_commande' => $idCommande]);
-    $commande = $verification->fetch(PDO::FETCH_ASSOC);
+  // Aucune ligne mise à jour : vérifier si le numéro existe.
+  // 404 signifie « commande inconnue » ; 409 signifie « mauvais état ».
+  if ($miseAJour->rowCount() === 0) {
+    $recherche = $connexion->prepare(
+      'SELECT 1 FROM commande WHERE id_commande = :id'
+    );
+    $recherche->execute([':id' => $idCommande]);
 
-    if ($commande === false) {
-      $repondre(404);
+    if ($recherche->fetchColumn() === false) {
+      http_response_code(404);
+    } else {
+      http_response_code(409);
     }
-
-    $repondre(409);
+    exit;
   }
 
-  $repondre(200, [
+  // La commande a bien été acceptée : renvoyer son numéro et son nouvel état.
+  http_response_code(200);
+  echo json_encode([
     'succes' => true,
     'id_commande' => (int) $idCommande,
     'id_etat' => 2
-  ]);
+  ], JSON_UNESCAPED_UNICODE);
 } catch (PDOException $exception) {
-  // Le contrat du lot demande une erreur silencieuse côté client : journaliser
-  // le détail pour l'administrateur sans exposer d'information SQL à RestoSwing.
+  // Ne pas envoyer les détails de la base au client. Le journal serveur
+  // les conserve pour aider à trouver la cause du problème.
   error_log('commande_accepter.php : ' . $exception->getMessage());
-  $repondre(500);
+  http_response_code(500);
 }

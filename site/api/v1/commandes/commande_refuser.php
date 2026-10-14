@@ -4,7 +4,7 @@ include("../../../db_functions.php");
 
 $dbh = db_connect();
 
-$id_commande = $_GET['id'] ?? null;
+$id_commande = $_GET['id_commande'] ?? null;
 
 header("Content-Type: application/json; charset=utf-8");
 

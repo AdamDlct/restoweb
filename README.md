@@ -53,6 +53,7 @@ Les scripts SQL sont disponibles dans le dossier [`database/`](./database) :
 - [`MPD_VPROF.sql`](./database/MPD_VPROF.sql) : modele physique de donnees
 - [`triggers_panier.sql`](./database/triggers_panier.sql) : triggers lies au panier
 - [`insert_panier_test.sql`](./database/insert_panier_test.sql) : donnees de test pour le panier
+- Documentation_technique_API_RestoWeb
 
 ## Organisation du projet
 

@@ -1,75 +1,179 @@
-# Notre plan pour l'API du lot 5
+# API des commandes
 
-L'objectif est de relier RestoWeb à RestoSwing, l'application utilisée en cuisine. RestoSwing pourra demander les commandes payées, puis indiquer si la cuisine les accepte, les refuse ou les a terminées. Voici une répartition possible pour avancer à cinq et comprendre chaque partie de l'échange.
+Cette API permet au back-office RestoSwing de consulter et de mettre à jour les
+commandes stockées dans la base `restoswing`.
 
-### Définir les règles communes
+## Adresse de base
 
-Confirmer les états : `0` pour le panier, `1` pour une commande payée en attente, `2` en préparation, `3` abandonnée et `4` prête.
+Sous l'installation locale XAMPP utilisée par le projet, les endpoints se
+trouvent sous :
 
-Préparer `site/api/_common.php` pour partager la validation des paramètres, la connexion à la base et les réponses silencieuses. Communiquer les règles retenues avant qu'ils terminent leurs endpoints.
+```text
+http://localhost/www/restoweb/restoweb/site/api/v1/commandes/
+```
 
-### Lire les commandes en attente
+Adaptez cette adresse au nom d'hôte et au chemin configurés sur votre serveur.
+Les exemples ci-dessous utilisent `http://localhost` et supposent que le projet
+est installé sous `/www/restoweb/restoweb`.
 
-Créer `site/api/commandes_en_attente.php`. L'API renverra en JSON les commandes à l'état `1`, avec leurs produits, quantités et totaux. S'il n'y a aucune commande, elle renverra `[]`.
+## Conventions
 
-S'appuyer sur le format JSON convenu et le partager pour la documentation.
+- Les identifiants de commande sont transmis dans l'URL avec le paramètre
+  `id_commande`.
+- Les endpoints de consultation et de changement d'état s'utilisent avec la
+  méthode `GET`.
+- Les réponses nominales des endpoints de commande sont au format JSON.
+- Les états manipulés par les endpoints sont : `1` (en attente), `2` (en
+  préparation), `4` (terminée) et `5` (refusée). L'état `0` correspond au panier
+  en cours dans le site. Les autres états ne sont pas décrits ici faute de
+  définition commune dans les endpoints.
+- Ces endpoints ne vérifient pas l'identité ou les droits du client appelant.
+  Ne les exposez pas à un réseau non fiable sans ajouter d'authentification et
+  d'autorisation.
 
-### Mettre à jour l'état des commandes
+## Endpoints
 
-Créer `site/api/commande_accepter.php`, `site/api/commande_refuser.php` et `site/api/commande_terminer.php`.
+### Lister les commandes en attente
 
-Appliquer uniquement les transitions `1 → 2`, `1 → 3` et `2 → 4`. Ainsi, une action envoyée dans le mauvais ordre ne changera pas l'état de la commande.
+```http
+GET /commandes_en_attente.php
+```
 
-### Expliquer comment utiliser l'API
+Renvoie les commandes à l'état `1` qui ont au moins une ligne de commande.
+Chaque élément contient `id_commande`, `date_commande`, `id_etat` et `Total`
+(somme des quantités des lignes).
 
-Rédiger `docs/lot5-api.md` avec les URLs, paramètres, états et réponses. Créer également `docs/exemple-commandes-en-attente.json`.
+Exemple :
 
-Se coordonner pour les états et avec Marius pour que l'exemple corresponde exactement au JSON renvoyé par l'API.
+```bash
+curl "http://localhost/www/restoweb/restoweb/site/api/v1/commandes/commandes_en_attente.php"
+```
 
-### Vérifier l'ensemble
+Réponse nominale :
 
-Préparer des données de test, puis tester la liste et les trois actions. Vérifier les états enregistrés en base, le cas sans commande, les identifiants invalides et les actions répétées.
+```json
+[
+  {
+    "id_commande": 12,
+    "date_commande": "2026-10-15 09:00:00",
+    "id_etat": 1,
+    "Total": 3
+  }
+]
+```
 
-Si un résultat est inattendu, noter l'endpoint concerné et le transmettre à la personne responsable du fichier.
+Une liste vide est renvoyée sous la forme `[]` lorsqu'aucune commande
+correspondante n'est trouvée.
 
-Cette répartition est une proposition : l'essentiel est que les états et le format JSON soient décidés avant que les endpoints et la documentation soient terminés.
+### Consulter les lignes d'une commande
 
-## Fichiers à créer ou à vérifier
+```http
+GET /commande_detaillee.php?id_commande={id}
+```
 
-À créer :
+Renvoie les lignes de la commande sous forme de tableau JSON. Chaque ligne
+contient `id_ligne_commande`, `libelle` et `qte`.
 
-- `site/api/_common.php`
-- `site/api/commandes_en_attente.php`
-- `site/api/commande_accepter.php`
-- `site/api/commande_refuser.php`
-- `site/api/commande_terminer.php`
-- `docs/lot5-api.md`,
-- `docs/exemple-commandes-en-attente.json`.
+Exemple :
 
-À vérifier : `site/db_functions.php` pour que l'API puisse gérer une erreur de connexion sans l'afficher à RestoSwing; `site/paiement.php` pour confirmer qu'une commande payée passe bien à l'état `1`;
-puis `README.md` pour ajouter un lien vers la documentation.
+```bash
+curl "http://localhost/www/restoweb/restoweb/site/api/v1/commandes/commande_detaillee.php?id_commande=12"
+```
 
-## Adresses utilisées par RestoSwing
+Réponse nominale :
 
-- `GET /api/commandes_en_attente.php` : récupérer la liste des commandes en attente.
-- `GET /api/commande_accepter.php?id_commande=XX` : accepter une commande.
-- `GET /api/commande_refuser.php?id_commande=XX` : refuser une commande.
-- `GET /api/commande_terminer.php?id_commande=XX` : indiquer qu'une commande est prête.
+```json
+[
+  {
+    "id_ligne_commande": 34,
+    "libelle": "Soupe à l'oignon",
+    "qte": 2
+  }
+]
+```
 
-## Vérification en équipe
+### Accepter une commande
 
-Avant de considérer le lot terminé, testons ensemble une liste vide et une liste avec des commandes, les trois changements d'état, un identifiant invalide et une action répétée. Le but est de vérifier à la fois ce que reçoit RestoSwing et ce qui a réellement été enregistré dans la base de données.
+```http
+GET /commande_accepter.php?id_commande={id}
+```
 
+Seule une commande à l'état `1` peut passer à l'état `2`.
 
-SELECT DISTINCT c.id_commande, c.date_commande, c.id_etat, SUM(l.qte)
-FROM commande c, ligne_commande l
-WHERE c.id_commande = l.id_commande
-AND c.id_etat = 1
-GROUP BY c.id_commande;
+Exemple :
 
-commande détail
+```bash
+curl -i "http://localhost/www/restoweb/restoweb/site/api/v1/commandes/commande_accepter.php?id_commande=12"
+```
 
-SELECT l.id_ligne_commande, p.libelle, l.qte
-FROM ligne_commande l, produit p
-WHERE l.id_produit = p.id_produit
-AND l.id_commande = 3;
+En cas de succès, l'API renvoie `200 OK` et :
+
+```json
+{
+  "succes": true,
+  "id_commande": 12,
+  "id_etat": 2
+}
+```
+
+### Terminer une commande
+
+```http
+GET /commande_terminer.php?id_commande={id}
+```
+
+Seule une commande à l'état `2` peut passer à l'état `4`.
+
+Exemple :
+
+```bash
+curl -i "http://localhost/www/restoweb/restoweb/site/api/v1/commandes/commande_terminer.php?id_commande=12"
+```
+
+En cas de succès, l'API renvoie `200 OK` et :
+
+```json
+{
+  "succes": true,
+  "id_commande": 12,
+  "id_etat": 4
+}
+```
+
+### Refuser une commande
+
+```http
+GET /commande_refuser.php?id_commande={id}
+```
+
+Pour un identifiant fourni, l'endpoint demande le passage à l'état `5` et
+renvoie un objet JSON indiquant `succes`, `id_commande` et `id_etat`. À la
+différence des endpoints d'acceptation et de fin, il ne contrôle pas l'état
+actuel de la commande et ne distingue pas une commande inconnue.
+
+Exemple :
+
+```bash
+curl -i "http://localhost/www/restoweb/restoweb/site/api/v1/commandes/commande_refuser.php?id_commande=12"
+```
+
+## Codes HTTP et limites connues
+
+Les endpoints d'acceptation et de fin appliquent les codes suivants :
+
+| Code HTTP | Signification |
+| --- | --- |
+| `200` | Changement d'état effectué ; réponse JSON de succès. |
+| `400` | Identifiant absent, invalide ou non positif. |
+| `404` | Identifiant valide, mais commande inexistante. |
+| `405` | Méthode autre que `GET`. L'en-tête `Allow: GET` est renvoyé. |
+| `409` | La commande existe, mais son état ne permet pas cette transition. |
+| `500` | Erreur de base de données. Les détails ne sont pas envoyés au client. |
+
+Les réponses d'erreur de ces deux endpoints sont vides. Les autres endpoints
+ont une gestion des erreurs moins uniforme : notamment, la validation des
+paramètres et les codes HTTP d'erreur ne suivent pas tous ce contrat.
+
+L'interface de suivi du site utilise actuellement une simulation JavaScript
+des étapes de commande ; elle n'interroge pas encore cette API pour afficher
+les changements d'état en temps réel.

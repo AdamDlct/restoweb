@@ -20,7 +20,7 @@ Le client est notifie lorsque sa commande est prete, puis vient la recuperer au 
 - Suivi de commande
 - Interface responsive utilisable sur smartphone
 - Scripts SQL pour la base de donnees et les tests du panier
-- Communication prevue avec RestoSwing via une API REST
+- Endpoints HTTP pour consulter et mettre a jour les commandes depuis RestoSwing
 
 ## Technologies
 
@@ -46,6 +46,7 @@ restoweb/
 ## Documentation
 
 La documentation de conception est disponible dans le dossier [`docs/`](./docs).
+Les endpoints de commandes, leurs paramètres et leurs réponses sont décrits dans [`api/API.md`](./API.md).
 
 Les scripts SQL sont disponibles dans le dossier [`database/`](./database) :
 

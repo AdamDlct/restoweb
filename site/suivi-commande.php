@@ -6,7 +6,7 @@ session_start();
 // $user_id = isset($_SESSION["id_user"]) ?? "";
 $user_id = 1; //tests
 
-$sql = 'SELECT * FROM commande WHERE id_user = :id_user';
+$sql = 'SELECT * FROM commande WHERE id_user = :id_user ORDER BY id_commande DESC LIMIT 1;';
 
 try {
   $dbh = db_connect();
@@ -24,12 +24,9 @@ $commande = $rows[0];
   $id_etat = $commande["id_etat"];
   $date_commande = $commande["date_commande"];
   $total_commande = $commande["total_commande"];
-  // $type_conso     = $commande["type_conso"];
-  $type_conso = 0; //tests
+  $type_conso     = $commande["type_conso"];
 
 
-print_r($rows[0]);
-// print_r($_SESSION);
 /*
   ============================================================================
   INTEGRATION PHP - PAGE SUIVI DE COMMANDE
@@ -136,8 +133,7 @@ print_r($rows[0]);
               <p class="dt-label">Mode</p>
               <?php
 
-              echo $type_conso ? "<p class='dt-value' id='detail-mode'>🍽️ Sur place</p>" : "<p class='dt-value' id='detail-mode'>🥡 A emporter</p>";
-
+              echo $type_conso ? "<p class='dt-value'>🍽️ Sur place</p>" : "<p class='dt-value'>🥡 A emporter</p>";
               ?>
 
             </div>
@@ -153,7 +149,7 @@ print_r($rows[0]);
         </div>
 
         <div class="food-photo">
-          <img src="https://images.unsplash.com/photo-1675670601305-3e04ec45430f?w=600&h=400&fit=crop&auto=format"
+          <img src="images/Plat gastronomique Resto Web - suivi.avif"
             alt="Plat gastronomique Resto Web" />
           <div class="food-photo-gradient"></div>
           <div class="food-photo-text">

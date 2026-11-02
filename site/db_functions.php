@@ -1,7 +1,5 @@
 <?php
-//
-// ph20b : pays de l'U.E. avec une BD
-//
+
 /**
  * Connexion à la base de données
  *

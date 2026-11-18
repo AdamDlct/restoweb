@@ -13,7 +13,7 @@
  * @throws PDOException si la connexion échoue et que $throwException vaut true
  */
 function db_connect($throwException = false) {
-  $dsn = 'mysql:host=localhost;dbname=restoweb>';  // contient le nom du serveur et de la base
+  $dsn = 'mysql:host=localhost;dbname=restoweb';  // contient le nom du serveur et de la base
   $user = 'root';
   $password = '';
   try {

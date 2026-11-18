@@ -46,7 +46,7 @@ Chaque élément contient `id_commande`, `date_commande`, `id_etat` et `Total`
 Exemple :
 
 ```bash
-curl "http://localhost/www/restoweb/restoweb/site/api/v1/commandes/commandes_en_attente.php"
+curl "http://localhost/www/site/api/v1/commandes/commandes_en_attente.php"
 ```
 
 Réponse nominale :
@@ -77,7 +77,7 @@ contient `id_ligne_commande`, `libelle` et `qte`.
 Exemple :
 
 ```bash
-curl "http://localhost/www/restoweb/restoweb/site/api/v1/commandes/commande_detaillee.php?id_commande=12"
+curl "http://localhost/www/site/api/v1/commandes/commande_detaillee.php?id_commande=12"
 ```
 
 Réponse nominale :
@@ -103,7 +103,7 @@ Seule une commande à l'état `1` peut passer à l'état `2`.
 Exemple :
 
 ```bash
-curl -i "http://localhost/www/restoweb/restoweb/site/api/v1/commandes/commande_accepter.php?id_commande=12"
+curl -i "http://localhost/www/site/api/v1/commandes/commande_accepter.php?id_commande=12"
 ```
 
 En cas de succès, l'API renvoie `200 OK` et :
@@ -127,7 +127,7 @@ Seule une commande à l'état `2` peut passer à l'état `4`.
 Exemple :
 
 ```bash
-curl -i "http://localhost/www/restoweb/restoweb/site/api/v1/commandes/commande_terminer.php?id_commande=12"
+curl -i "http://localhost/www/site/api/v1/commandes/commande_terminer.php?id_commande=12"
 ```
 
 En cas de succès, l'API renvoie `200 OK` et :
@@ -154,7 +154,7 @@ actuel de la commande et ne distingue pas une commande inconnue.
 Exemple :
 
 ```bash
-curl -i "http://localhost/www/restoweb/restoweb/site/api/v1/commandes/commande_refuser.php?id_commande=12"
+curl -i "http://localhost/www/site/api/v1/commandes/commande_refuser.php?id_commande=12"
 ```
 
 ## Codes HTTP et limites connues

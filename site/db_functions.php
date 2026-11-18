@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Ouvre une connexion PDO à la base restoswing.
+ * Ouvre une connexion PDO à la base restoweb.
  *
  * Par défaut, conserve le comportement historique des pages du site en affichant
  * une erreur puis en arrêtant le script en cas d'échec. Les endpoints API peuvent

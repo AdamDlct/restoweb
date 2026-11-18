@@ -4,7 +4,7 @@
 -- Ordre d'execution : MPD_VPROF.sql -> triggers_panier.sql -> produits.sql -> ce fichier
 -- ============================================================================
 
-USE restoswing;
+USE restoweb;
 
 -- Un panier en cours (id_etat = 0, sur place) pour le compte de test "jef"
 INSERT INTO commande (id_etat, date_commande, total_commande, type_conso, id_user)

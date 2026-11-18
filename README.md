@@ -4,7 +4,7 @@
 
 ## Présentation du projet
 
-Le client consulte la carte, ajoute des produits à son panier, choisit la consommation sur place ou à emporter, puis valide une commande au moyen d’un paiement simulé. Il peut ensuite consulter un écran de suivi. Le restaurateur traite les commandes depuis l’application compagnon **RestoSwing** (Java/Swing), qui utilise l’API HTTP de ce dépôt pour lister les commandes en attente, en consulter le détail et les accepter, refuser ou terminer.
+Le client consulte la carte, ajoute des produits à son panier, choisit la consommation sur place ou à emporter, puis valide une commande au moyen d’un paiement simulé. Il peut ensuite consulter un écran de suivi.
 
 Le panier et ses lignes sont stockés dans MariaDB. Les triggers SQL calculent les montants HT et TTC. Le suivi affiché côté client repose actuellement sur une simulation JavaScript et n’est pas synchronisé en temps réel avec les changements d’état opérés par RestoSwing.
 

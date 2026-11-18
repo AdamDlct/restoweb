@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Ouvre une connexion PDO à la base restoswing.
+ * Ouvre une connexion PDO à la base restoweb.
  *
  * Par défaut, conserve le comportement historique des pages du site en affichant
  * une erreur puis en arrêtant le script en cas d'échec. Les endpoints API peuvent
@@ -13,7 +13,7 @@
  * @throws PDOException si la connexion échoue et que $throwException vaut true
  */
 function db_connect($throwException = false) {
-  $dsn = 'mysql:host=localhost;dbname=restoswing';  // contient le nom du serveur et de la base
+  $dsn = 'mysql:host=localhost;dbname=restoweb';  // contient le nom du serveur et de la base
   $user = 'root';
   $password = '';
   try {

@@ -11,7 +11,7 @@
 --   image       : nom du fichier dans site/images/
 -- ============================================================================
 
-USE restoswing;
+USE restoweb;
 
 ALTER TABLE produit
   ADD COLUMN IF NOT EXISTS description VARCHAR(255),

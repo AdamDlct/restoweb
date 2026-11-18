@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS restoswing;
-USE restoswing;
+CREATE DATABASE IF NOT EXISTS restoweb;
+USE restoweb;
 
 CREATE TABLE utilisateur(
    id_user INT AUTO_INCREMENT,
@@ -56,7 +56,7 @@ CREATE TABLE ligne_commande(
 -- ============================================================================
 
 INSERT INTO utilisateur(login, password, email) 
-VALUES ("jef", "jef", "jef@restoswing.lim");
+VALUES ("jef", "jef", "jef@restoweb.lim");
 
 INSERT INTO produit (id_produit, libelle, prix_ht, description, categorie, image) 
 VALUES

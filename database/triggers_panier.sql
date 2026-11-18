@@ -18,7 +18,7 @@
 --                         0 = a emporter (TVA 5,5 % -> x 1.055)
 -- ============================================================================
 
-USE restoswing;
+USE restoweb;
 
 DROP TRIGGER IF EXISTS trg_ligne_commande_before_insert;
 DROP TRIGGER IF EXISTS trg_ligne_commande_before_update;
